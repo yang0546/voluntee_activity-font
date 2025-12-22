@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="header-bar">
+    <view class="search-bar">
+      <input class="search-input" placeholder="搜索活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
+      <button class="search-btn" bindtap="onSearch">搜索</button>
+    </view>
+    <view class="actions">
+      <button class="toggle-btn" bindtap="toggleSelfOnly">
+        <text>{{showSelfOnly ? '查看全部' : '只看我的'}}</text>
+      </button>
+      <button class="create-btn" bindtap="createActivity">+ 创建活动</button>
+    </view>
+  </view>
+  <scroll-view class="activity-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="activity-item" wx:for="{{activityList}}" wx:key="id" bindtap="viewActivityDetail" data-id="{{item.id}}">
+      <view class="activity-header">
+        <text class="activity-title">{{item.title}}</text>
+        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+      </view>
+      <text class="activity-desc">{{item.description}}</text>
+      <view class="activity-info">
+        <text class="info-item">📍 {{item.location}}</text>
+        <text class="info-item">⏰ {{formatTime(item.startTime)}}</text>
+        <text class="info-item">👥 {{item.currentPeople}}/{{item.requiredPeople}}</text>
+      </view>
+      <view class="activity-footer">
+        <text class="deadline">截止：{{formatTime(item.signupDeadline)}}</text>
+      </view>
+      <view class="item-actions">
+        <button class="outline-btn" size="mini" data-id="{{item.id}}" catchtap="viewActivityDetail">详情</button>
+        <button class="primary-btn" size="mini" data-id="{{item.id}}" data-leaderid="{{item.leaderId}}" catchtap="viewSignupList">报名审核</button>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
+  </scroll-view>
+</view>
+

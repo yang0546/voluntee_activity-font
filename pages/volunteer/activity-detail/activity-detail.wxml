@@ -1,0 +1,41 @@
+<view class="container" wx:if="{{!loading}}">
+  <view class="activity-card">
+    <view class="header">
+      <text class="title">{{activity.title}}</text>
+      <text class="status-badge status-{{activity.status}}">{{getStatusText(activity.status)}}</text>
+    </view>
+    <view class="section">
+      <text class="label">活动说明</text>
+      <text class="content">{{activity.description}}</text>
+    </view>
+    <view class="section">
+      <text class="label">活动地点</text>
+      <text class="content">📍 {{activity.location}}</text>
+    </view>
+    <view class="section">
+      <text class="label">活动时间</text>
+      <text class="content">⏰ {{formatTime(activity.startTime)}} - {{formatTime(activity.endTime)}}</text>
+    </view>
+    <view class="section">
+      <text class="label">报名截止</text>
+      <text class="content">⏳ {{formatTime(activity.signupDeadline)}}</text>
+    </view>
+    <view class="section">
+      <text class="label">人数要求</text>
+      <text class="content">👥 {{activity.currentPeople}}/{{activity.requiredPeople}}</text>
+    </view>
+    <view class="section">
+      <text class="label">负责人</text>
+      <text class="content">👤 {{activity.leaderName}}</text>
+    </view>
+  </view>
+  <view class="actions">
+    <button class="btn btn-primary" wx:if="{{canSignup}}" bindtap="handleSignup">立即报名</button>
+    <button class="btn btn-secondary" wx:if="{{signupStatus === 0}}">待审核</button>
+    <button class="btn btn-success" wx:if="{{signupStatus === 1}}" bindtap="viewTasks">查看任务</button>
+    <button class="btn btn-danger" wx:if="{{signupStatus === 2}}">审核拒绝</button>
+    <button class="btn btn-disabled" wx:if="{{!canSignup && signupStatus === null}}">无法报名</button>
+  </view>
+</view>
+<view class="loading" wx:if="{{loading}}">加载中...</view>
+

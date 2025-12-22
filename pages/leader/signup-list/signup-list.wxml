@@ -1,0 +1,47 @@
+<view class="container">
+  <view class="filter-bar">
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+      <view class="status-picker">
+        <text>{{statusOptions[statusIndex].label}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+  <scroll-view class="signup-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="signup-item" wx:for="{{signupList}}" wx:key="signupId">
+      <view class="signup-header">
+        <view class="user-info">
+          <text class="user-name">{{item.userName}}</text>
+          <text class="signup-time">报名时间：{{formatTime(item.signupTime)}}</text>
+        </view>
+        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+      </view>
+      <view class="activity-info">
+        <text class="activity-title">{{item.title}}</text>
+        <text class="activity-desc">{{item.description}}</text>
+      </view>
+      <view class="audit-info" wx:if="{{item.auditTime}}">
+        <text class="audit-time">审核时间：{{formatTime(item.auditTime)}}</text>
+        <text class="audit-reason" wx:if="{{item.auditReason}}">原因：{{item.auditReason}}</text>
+      </view>
+      <view class="signup-actions" wx:if="{{item.status === 0}}">
+        <button class="btn btn-success" data-signupid="{{item.signupId}}" data-status="1" bindtap="auditSignup">通过</button>
+        <button class="btn btn-danger" data-signupid="{{item.signupId}}" data-status="2" bindtap="auditSignup">拒绝</button>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && signupList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && signupList.length === 0}}">暂无报名记录</view>
+  </scroll-view>
+
+  <view class="mask" wx:if="{{showRejectModal}}">
+    <view class="modal">
+      <view class="modal-title">填写拒绝原因</view>
+      <textarea class="modal-textarea" maxlength="200" placeholder="请输入拒绝原因（必填）" value="{{rejectReason}}" bindinput="onRejectReasonInput" />
+      <view class="modal-actions">
+        <button class="modal-btn cancel" bindtap="cancelReject">取消</button>
+        <button class="modal-btn confirm" bindtap="confirmReject">提交</button>
+      </view>
+    </view>
+  </view>
+</view>

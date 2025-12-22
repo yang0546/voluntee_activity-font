@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+      <view class="status-picker">
+        <text>{{statusOptions[statusIndex].label}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+  <scroll-view class="activity-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="activity-item" wx:for="{{activityList}}" wx:key="id" bindtap="editActivity" data-id="{{item.id}}">
+      <view class="activity-header">
+        <text class="activity-title">{{item.title}}</text>
+        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+      </view>
+      <text class="activity-desc">{{item.description}}</text>
+      <view class="activity-info">
+        <text class="info-item">📍 {{item.location}}</text>
+        <text class="info-item">⏰ {{formatTime(item.startTime)}}</text>
+        <text class="info-item">👥 {{item.currentPeople}}/{{item.requiredPeople}}</text>
+      </view>
+      <view class="activity-footer">
+        <text class="leader">负责人：{{item.leaderName}}</text>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
+  </scroll-view>
+</view>
+

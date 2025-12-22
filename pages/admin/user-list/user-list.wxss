@@ -1,0 +1,123 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  gap: 20rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 60rpx;
+  padding: 0 20rpx;
+  background: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+}
+
+.role-picker {
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  height: 60rpx;
+  background: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+}
+
+.arrow {
+  margin-left: 10rpx;
+  font-size: 20rpx;
+  color: #999;
+}
+
+.search-btn {
+  height: 60rpx;
+  line-height: 60rpx;
+  background: #667eea;
+  color: #fff;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.user-list {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.user-meta {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 5rpx;
+}
+
+.user-role {
+  margin-left: 20rpx;
+}
+
+.role-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.role-0 {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.role-1 {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.role-2 {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.load-more, .no-more, .empty {
+  text-align: center;
+  padding: 40rpx;
+  font-size: 28rpx;
+  color: #999;
+}
+

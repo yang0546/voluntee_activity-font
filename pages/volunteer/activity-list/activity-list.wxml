@@ -1,0 +1,137 @@
+<view class="container">
+  <view class="page-header">
+    <view class="hero-text">
+      <text class="eyebrow">Volunteer Hub</text>
+      <text class="hero-title">活动列表</text>
+      <text class="hero-sub">挑选活动、管理报名，一站式完成</text>
+      <view class="hero-stats">
+        <view class="stat-pill">
+          <text class="stat-label">已报名</text>
+          <text class="stat-number">{{applied.total || 0}}</text>
+        </view>
+        <view class="stat-pill">
+          <text class="stat-label">已通过</text>
+          <text class="stat-number">{{approved.total || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tab-bar">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab-item {{activeTab === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onTabChange"
+    >
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="search-card" wx:if="{{activeTab === 'market'}}">
+    <view class="input-wrap">
+      <input class="search-input" placeholder="搜索活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
+    </view>
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+      <view class="status-picker">
+        <text>{{statusOptions[statusIndex].label}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <scroll-view
+    class="scroll-area"
+    scroll-y
+    refresher-enabled
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    bindscrolltolower="loadActiveTabMore"
+    lower-threshold="80"
+  >
+    <!-- 活动广场 -->
+    <block wx:if="{{activeTab === 'market'}}">
+      <view class="activity-item" wx:for="{{market.list}}" wx:key="id" bindtap="viewActivityDetail" data-id="{{item.id}}">
+        <view class="activity-header">
+          <view class="badge-dot {{getStatusClass(item.status)}}"></view>
+          <text class="activity-title">{{item.title}}</text>
+          <text class="status-chip {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+        </view>
+        <text class="activity-desc">{{item.description}}</text>
+        <view class="activity-info">
+          <view class="info-chip">
+            <text class="icon">📍</text>
+            <text>{{item.location}}</text>
+          </view>
+          <view class="info-chip">
+            <text class="icon">⏰</text>
+            <text>{{item.startTimeDisplay}}</text>
+          </view>
+          <view class="info-chip">
+            <text class="icon">👥</text>
+            <text>{{item.currentPeople}} / {{item.requiredPeople}}</text>
+          </view>
+        </view>
+        <view class="activity-footer">
+          <text class="leader">负责人：{{item.leaderName}}</text>
+          <text class="deadline">报名截止：{{item.deadlineDisplay}}</text>
+        </view>
+        <view class="activity-actions">
+          <button
+            class="signup-btn"
+            type="primary"
+            size="mini"
+            data-id="{{item.id}}"
+            catchtap="onSignup"
+            disabled="{{item.isSignupClosed}}"
+          >
+            {{item.isSignupClosed ? '报名已截止' : '立即报名'}}
+          </button>
+        </view>
+      </view>
+      <view class="load-more" wx:if="{{market.loading}}">加载中...</view>
+      <view class="no-more" wx:if="{{!market.hasMore && market.list.length > 0}}">没有更多了</view>
+      <view class="empty" wx:if="{{!market.loading && market.list.length === 0}}">暂无活动</view>
+    </block>
+
+    <!-- 已报名 -->
+    <block wx:elif="{{activeTab === 'applied'}}">
+      <view class="signup-card" wx:for="{{applied.list}}" wx:key="signupId">
+        <view class="signup-header">
+          <text class="signup-title">{{item.title}}</text>
+          <text class="audit-badge {{item.statusClass}}">{{item.statusText}}</text>
+        </view>
+        <text class="signup-desc">{{item.description}}</text>
+        <text wx:if="{{item.status === 2 && item.auditReason}}" class="audit-reason">拒绝原因：{{item.auditReason}}</text>
+        <view class="signup-meta">
+          <text>报名时间：{{item.signupTimeDisplay}}</text>
+          <text wx:if="{{item.auditTimeDisplay}}">审核时间：{{item.auditTimeDisplay}}</text>
+        </view>
+      </view>
+      <view class="load-more" wx:if="{{applied.loading}}">加载中...</view>
+      <view class="no-more" wx:if="{{!applied.hasMore && applied.list.length > 0}}">没有更多了</view>
+      <view class="empty" wx:if="{{!applied.loading && applied.list.length === 0}}">暂无报名记录</view>
+    </block>
+
+    <!-- 已通过 -->
+    <block wx:elif="{{activeTab === 'approved'}}">
+      <view class="signup-card" wx:for="{{approved.list}}" wx:key="signupId">
+        <view class="signup-header">
+          <text class="signup-title">{{item.title}}</text>
+          <text class="audit-badge {{item.statusClass}}">{{item.statusText}}</text>
+        </view>
+        <text class="signup-desc">{{item.description}}</text>
+        <text wx:if="{{item.status === 2 && item.auditReason}}" class="audit-reason">拒绝原因：{{item.auditReason}}</text>
+        <view class="signup-meta">
+          <text>报名时间：{{item.signupTimeDisplay}}</text>
+          <text wx:if="{{item.auditTimeDisplay}}">审核时间：{{item.auditTimeDisplay}}</text>
+        </view>
+      </view>
+      <view class="load-more" wx:if="{{approved.loading}}">加载中...</view>
+      <view class="no-more" wx:if="{{!approved.hasMore && approved.list.length > 0}}">没有更多了</view>
+      <view class="empty" wx:if="{{!approved.loading && approved.list.length === 0}}">暂无报名成功的活动</view>
+    </block>
+  </scroll-view>
+</view>

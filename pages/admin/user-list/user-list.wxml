@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索姓名" value="{{searchParams.name}}" bindinput="onNameInput" />
+    <input class="search-input" placeholder="搜索学院" value="{{searchParams.college}}" bindinput="onCollegeInput" />
+    <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleIndex}}" bindchange="onRoleChange">
+      <view class="role-picker">
+        <text>{{roleOptions[roleIndex].label}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+  <scroll-view class="user-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="user-item" wx:for="{{userList}}" wx:key="id" bindtap="editUser" data-id="{{item.id}}">
+      <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <text class="user-name">{{item.name}}</text>
+        <text class="user-meta">学院：{{item.college || '未设置'}}</text>
+        <text class="user-meta">手机：{{item.phone || '未设置'}}</text>
+        <text class="user-meta">注册时间：{{formatTime(item.createTime)}}</text>
+      </view>
+      <view class="user-role">
+        <text class="role-badge role-{{item.role}}">{{getRoleText(item.role)}}</text>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && userList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && userList.length === 0}}">暂无用户</view>
+  </scroll-view>
+</view>
+

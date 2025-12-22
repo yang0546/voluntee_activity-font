@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="login-header">
+    <view class="logo">志</view>
+    <text class="title">志愿者活动管理系统</text>
+  </view>
+  <view class="login-form">
+    <view class="login-tip">
+      <text>点击下方按钮，授权获取您的微信头像和昵称</text>
+    </view>
+    <button class="login-btn" bindtap="handleLogin">微信登录</button>
+  </view>
+</view>
+
