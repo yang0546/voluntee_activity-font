@@ -119,7 +119,7 @@ const BASE_URL = "http://localhost:8080"; // 修改为你的后端服务地址
 除登录接口外，所有接口都需要在请求头中携带 JWT Token：
 
 ```
-Authorization: Bearer {token}
+token: {token}
 ```
 
 Token 会自动从本地存储中读取并添加到请求头中。
