@@ -1,0 +1,54 @@
+<view class="page">
+  <view class="top-hero">
+    <view class="hero-text">
+      <text class="hello">欢迎回来，{{welcomeName || '管理员'}}</text>
+      <text class="title">志愿者活动管理</text>
+      <text class="subtitle">一站式查看活动与用户数据</text>
+    </view>
+    <view class="hero-stat">
+      <text class="stat-label">待办入口</text>
+      <text class="stat-desc">活动广场 / 用户管理</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <!-- Banner 轮播 -->
+    <view class="card banner-card">
+      <swiper class="banner-swiper" autoplay interval="4000" circular indicator-dots indicator-active-color="#4f46e5">
+        <swiper-item wx:for="{{banners}}" wx:key="id">
+          <image class="banner-img" src="{{item.img}}" mode="aspectFill"></image>
+          <view class="banner-mask">
+            <text class="banner-title">{{item.title}}</text>
+            <text class="banner-desc">{{item.desc}}</text>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="grid">
+      <view class="quick-card primary" bindtap="goActivity">
+        <view class="quick-text">
+          <text class="quick-title">活动广场</text>
+          <text class="quick-desc">查看 / 筛选 / 编辑活动</text>
+        </view>
+        <text class="quick-arrow">›</text>
+      </view>
+
+      <view class="quick-card secondary" bindtap="goUser">
+        <view class="quick-text">
+          <text class="quick-title">用户管理</text>
+          <text class="quick-desc">用户信息与角色管理</text>
+        </view>
+        <text class="quick-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 小提示 -->
+    <view class="note">
+      <text class="note-icon">💡</text>
+      <text class="note-text">底部导航可快速切换「首页 / 活动广场 / 用户管理」</text>
+    </view>
+  </view>
+</view>
+

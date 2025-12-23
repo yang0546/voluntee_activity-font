@@ -1,0 +1,161 @@
+.page {
+  min-height: 100vh;
+  background: #f6f7fb;
+  padding: 20rpx 20rpx 120rpx;
+  box-sizing: border-box;
+}
+
+.top-hero {
+  background: linear-gradient(135deg, #6ea8ff 0%, #7e7bff 40%, #9a6bff 100%);
+  color: #f8f9ff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 16rpx 36rpx rgba(94, 114, 255, 0.25);
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.hello {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.hero-stat {
+  min-width: 170rpx;
+  text-align: right;
+  font-size: 24rpx;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+.content {
+  margin-top: 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18rpx;
+  box-shadow: 0 12rpx 28rpx rgba(15, 23, 42, 0.08);
+}
+
+.banner-card {
+  overflow: hidden;
+}
+
+.banner-swiper {
+  width: 100%;
+  height: 240rpx;
+}
+
+.banner-img {
+  width: 100%;
+  height: 240rpx;
+  display: block;
+}
+
+.banner-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16rpx;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 90%);
+  color: #fff;
+}
+
+.banner-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.banner-desc {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
+}
+
+.quick-card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10rpx 24rpx rgba(15, 23, 42, 0.08);
+  border: 1rpx solid #eef1f5;
+}
+
+.quick-card.primary {
+  background: linear-gradient(135deg, #ecf2ff 0%, #e0f7ff 100%);
+}
+
+.quick-card.secondary {
+  background: linear-gradient(135deg, #f7f0ff 0%, #f3f7ff 100%);
+}
+
+.quick-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  color: #0f172a;
+}
+
+.quick-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.quick-desc {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.quick-arrow {
+  font-size: 32rpx;
+  color: #9ca3af;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 14rpx 18rpx;
+  background: #f8fafc;
+  border-radius: 14rpx;
+  border: 1rpx solid #e5e7eb;
+  color: #475569;
+}
+
+.note-icon {
+  font-size: 28rpx;
+}
+
+.note-text {
+  font-size: 24rpx;
+}
+

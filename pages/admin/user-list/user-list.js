@@ -2,6 +2,7 @@ const { admin } = require('../../../utils/api')
 
 Page({
   data: {
+    welcomeName: '',
     userList: [],
     page: 1,
     pageSize: 10,
@@ -21,20 +22,25 @@ Page({
       { label: '负责人', value: 1 },
       { label: '管理员', value: 2 }
     ],
-    navTabs: [
-      { key: 'user', label: '用户管理', page: '/pages/admin/user-list/user-list' },
-      { key: 'activity', label: '活动管理', page: '/pages/admin/activity-list/activity-list' }
-    ],
     activeNav: 'user'
   },
 
-  onLoad() {
-    this.loadUserList(true)
+  onShow() {
+    this.setWelcomeName()
+    if (!this.data.userList.length) {
+      this.loadUserList(true)
+    }
   },
 
   onPullDownRefresh() {
     this.setData({ page: 1, hasMore: true })
     this.loadUserList(true)
+  },
+
+  setWelcomeName() {
+    const profile = wx.getStorageSync('userProfile') || {}
+    const name = profile.userName || profile.name
+    this.setData({ welcomeName: name || '管理员' })
   },
 
   onReachBottom() {
@@ -107,9 +113,9 @@ Page({
   },
 
   onNavChange(e) {
-    const { key, page } = e.currentTarget.dataset
-    if (key === this.data.activeNav) return
-    wx.redirectTo({ url: page })
+    const { key } = e.currentTarget.dataset
+    if (key === 'user') return
+    wx.switchTab({ url: '/pages/admin/activity-list/activity-list' })
   },
 
   editUser(e) {

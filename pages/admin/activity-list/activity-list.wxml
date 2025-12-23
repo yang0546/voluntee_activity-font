@@ -1,76 +1,103 @@
 <view class="page">
-  <view class="nav-shell">
-    <view class="brand">
-      <text class="brand-title">管理员工作台</text>
-      <text class="brand-sub">集中管理用户与活动</text>
+  <!-- 顶部渐变背景 -->
+  <view class="top-bg"></view>
+
+  <!-- 顶部导航与欢迎 -->
+  <view class="nav-bar">
+    <view class="nav-left">
+      <text class="nav-title">管理员工作台</text>
+      <text class="nav-sub">活动广场</text>
     </view>
     <view class="nav-tabs">
-      <view class="nav-tab {{activeNav==='user'?'active':''}}" data-key="user" data-page="/pages/admin/user-list/user-list" bindtap="onNavChange">用户管理</view>
-      <view class="nav-tab {{activeNav==='activity'?'active':''}}" data-key="activity" data-page="/pages/admin/activity-list/activity-list" bindtap="onNavChange">活动管理</view>
+      <view class="nav-tab" data-key="user" bindtap="onNavChange">用户管理</view>
+      <view class="nav-tab active">活动广场</view>
     </view>
   </view>
 
-  <view class="hero">
-    <view class="hero-text">
-      <text class="hero-title">活动管理</text>
-      <text class="hero-sub">快速筛选，点击卡片编辑</text>
+  <!-- 欢迎卡片 -->
+  <view class="hero-card">
+    <view class="hero-left">
+      <text class="hero-label">欢迎回来</text>
+      <text class="hero-title">Hi，{{welcomeName || '管理员'}}</text>
+      <text class="hero-sub">查看并管理所有活动，支持筛选与编辑</text>
+      <view class="hero-actions">
+        <button class="ghost-btn" bindtap="onResetFilters">重置筛选</button>
+        <button class="primary-btn" bindtap="onSearch">刷新数据</button>
+      </view>
     </view>
-    <view class="hero-actions">
-      <button class="pill-btn ghost" bindtap="onResetFilters">重置</button>
+    <view class="hero-stat">
+      <text class="stat-label">总活动数</text>
+      <text class="stat-value">{{total}}</text>
+      <text class="stat-tip">下拉即可刷新</text>
     </view>
   </view>
 
+  <!-- 筛选卡片 -->
   <view class="card filter-card">
-    <view class="filter-inline">
-      <input class="input pill" placeholder="活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
-      <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
-        <view class="picker pill">
-          <text>{{statusOptions[statusIndex].label}}</text>
-          <text class="chevron">></text>
-        </view>
-      </picker>
-      <button class="pill-btn primary wide" bindtap="onSearch">筛选</button>
+    <view class="card-header">
+      <text class="card-title">筛选条件</text>
+      <text class="card-sub">按标题和状态组合过滤</text>
+    </view>
+    <view class="filter-grid">
+      <view class="field">
+        <text class="field-label">活动标题</text>
+        <input class="input" placeholder="输入活动标题关键字" value="{{searchParams.title}}" bindinput="onSearchInput" />
+      </view>
+      <view class="field">
+        <text class="field-label">状态</text>
+        <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+          <view class="picker">
+            <text>{{statusOptions[statusIndex].label}}</text>
+            <text class="chevron">⌄</text>
+          </view>
+        </picker>
+      </view>
+      <button class="primary-btn full" bindtap="onSearch">开始筛选</button>
     </view>
   </view>
 
+  <!-- 列表头 -->
   <view class="section-head">
     <view>
       <text class="section-title">全部活动</text>
-      <text class="section-sub">共 {{total}} 场</text>
+      <text class="section-sub">共 {{total}} 场 · 下拉刷新获取最新</text>
     </view>
-    <view class="mini-actions">
-      <button class="mini-btn" bindtap="onSearch">刷新</button>
-    </view>
+    <button class="ghost-btn sm" bindtap="onSearch">刷新列表</button>
   </view>
 
+  <!-- 活动列表 -->
   <scroll-view class="list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
     <view class="activity-card" wx:for="{{activityList}}" wx:key="id" data-id="{{item.id}}" bindtap="editActivity">
       <view class="card-row">
-        <text class="title">{{item.title}}</text>
+        <view class="title-wrap">
+          <text class="title">{{item.title || '未命名活动'}}</text>
+          <text class="desc">{{item.description || '暂无简介'}}</text>
+        </view>
         <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
       </view>
-      <text class="desc">{{item.description}}</text>
+
       <view class="meta-grid">
-        <view class="meta">
-          <text class="meta-label">地点</text>
-          <text class="meta-value">{{item.location || '未设置'}}</text>
-        </view>
         <view class="meta">
           <text class="meta-label">时间</text>
           <text class="meta-value">{{formatTime(item.startTime)}} - {{formatTime(item.endTime)}}</text>
         </view>
         <view class="meta">
-          <text class="meta-label">报名截止</text>
-          <text class="meta-value">{{formatTime(item.signupDeadline)}}</text>
+          <text class="meta-label">地点</text>
+          <text class="meta-value">{{item.location || '未设置'}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">截止</text>
+          <text class="meta-value">{{formatTime(item.signupDeadline) || '未设置'}}</text>
         </view>
         <view class="meta">
           <text class="meta-label">人数</text>
-          <text class="meta-value">{{item.currentPeople}} / {{item.requiredPeople}}</text>
+          <text class="meta-value">{{item.currentPeople || 0}} / {{item.requiredPeople || 0}}</text>
         </view>
       </view>
+
       <view class="foot">
         <text class="leader">负责人：{{item.leaderName || '未设置'}}</text>
-        <text class="card-chevron">&gt;</text>
+        <text class="card-chevron">›</text>
       </view>
     </view>
 
@@ -78,5 +105,5 @@
     <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
   </scroll-view>
-
 </view>
+

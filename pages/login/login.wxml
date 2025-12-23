@@ -1,36 +1,82 @@
 <view class="page">
-  <view class="hero-card">
-    <view class="logo">志</view>
-    <view class="hero-text">
-      <text class="title">志愿者活动管理</text>
-      <text class="subtitle">用一次授权，畅通登录与数据同步</text>
-      <view class="tags">
-        <text class="tag">头像 / 昵称</text>
-        <text class="tag">快速进入</text>
-        <text class="tag">安全存储</text>
-      </view>
-    </view>
+  <!-- 背景装饰 -->
+  <view class="bg-decoration">
+    <view class="circle circle-1"></view>
+    <view class="circle circle-2"></view>
+    <view class="circle circle-3"></view>
   </view>
 
-  <view class="card">
-    <view class="card-title">需要获取的信息</view>
-    <view class="card-list">
-      <view class="item">
-        <view class="dot"></view>
-        <text class="item-text">微信头像与昵称，仅用于身份展示</text>
+  <!-- 顶部欢迎区域 -->
+  <view class="header-section">
+    <view class="welcome-text">欢迎回来</view>
+    <view class="app-name">志愿者活动管理</view>
+  </view>
+
+  <!-- 主卡片区域 -->
+  <view class="main-content">
+    <!-- 应用信息卡片 -->
+    <view class="app-card">
+      <view class="app-logo-wrapper">
+        <view class="app-logo">志</view>
+        <view class="logo-glow"></view>
       </view>
-      <view class="item">
-        <view class="dot"></view>
-        <text class="item-text">登录凭证（code），用于后台校验</text>
+      <view class="app-info">
+        <view class="app-title">志愿者活动管理</view>
+        <view class="app-desc">用一次授权，畅通登录与数据同步</view>
+        <view class="feature-tags">
+          <view class="feature-tag">
+            <text class="tag-icon">👤</text>
+            <text class="tag-text">头像/昵称</text>
+          </view>
+          <view class="feature-tag">
+            <text class="tag-icon">⚡</text>
+            <text class="tag-text">快速进入</text>
+          </view>
+          <view class="feature-tag">
+            <text class="tag-icon">🔒</text>
+            <text class="tag-text">安全存储</text>
+          </view>
+        </view>
       </view>
     </view>
-    <view class="tip">请同意授权后完成登录，我们不会未经允许发布消息。</view>
-    <button class="primary-btn" bindtap="handleLogin">微信授权并登录</button>
-    <view class="footer">
-      <text>点击即同意</text>
-      <text class="link">《用户协议》</text>
-      <text>和</text>
-      <text class="link">《隐私政策》</text>
+
+    <!-- 信息说明卡片 -->
+    <view class="info-card">
+      <view class="info-header">
+        <view class="info-icon">ℹ️</view>
+        <text class="info-title">需要获取的信息</text>
+      </view>
+      <view class="info-list">
+        <view class="info-item">
+          <view class="info-dot"></view>
+          <text class="info-text">微信头像与昵称，仅用于身份展示</text>
+        </view>
+        <view class="info-item">
+          <view class="info-dot"></view>
+          <text class="info-text">登录凭证（code），用于后台校验</text>
+        </view>
+      </view>
+      <view class="privacy-tip">
+        <text class="tip-icon">🛡️</text>
+        <text class="tip-text">请同意授权后完成登录，我们不会未经允许发布消息。</text>
+      </view>
+    </view>
+
+    <!-- 登录按钮 -->
+    <button class="login-btn" bindtap="handleLogin">
+      <view class="btn-content">
+        <text class="btn-icon">🔐</text>
+        <text class="btn-text">微信授权并登录</text>
+      </view>
+      <view class="btn-shine"></view>
+    </button>
+
+    <!-- 协议链接 -->
+    <view class="agreement-footer">
+      <text class="agreement-text">点击即同意</text>
+      <text class="agreement-link">《用户协议》</text>
+      <text class="agreement-text">和</text>
+      <text class="agreement-link">《隐私政策》</text>
     </view>
   </view>
 </view>

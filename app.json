@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/login/login",
+    "pages/admin/home/home",
     "pages/volunteer/activity-list/activity-list",
     "pages/volunteer/activity-detail/activity-detail",
     "pages/volunteer/task-list/task-list",
@@ -20,6 +21,26 @@
     "navigationBarTitleText": "志愿者活动管理",
     "navigationBarBackgroundColor": "#667eea",
     "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#94a3b8",
+    "selectedColor": "#4f46e5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/admin/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/admin/activity-list/activity-list",
+        "text": "活动广场"
+      },
+      {
+        "pagePath": "pages/admin/user-list/user-list",
+        "text": "用户管理"
+      }
+    ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",

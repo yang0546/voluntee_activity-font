@@ -29,11 +29,14 @@ Page({
               avatarUrl: avatarUrl
             }).then(data => {
               wx.hideLoading()
-              app.globalData.profile = data
+              // 后端新增 userName，用于首页欢迎语；兼容老字段 name
+              const displayName = data.userName || data.name || nickName
+              const normalizedProfile = { ...data, name: displayName, userName: displayName }
+              app.globalData.profile = normalizedProfile
               app.globalData.userInfo = userRes.userInfo
               wx.setStorageSync('token', data.token || '')
               wx.setStorageSync('role', data.role)
-              wx.setStorageSync('userProfile', data)
+              wx.setStorageSync('userProfile', normalizedProfile)
               this.redirectByRole(data.role)
             }).catch(err => {
               wx.hideLoading()
@@ -64,10 +67,15 @@ Page({
     } else if (role === 1) {
       url = '/pages/leader/activity-list/activity-list'
     } else if (role === 2) {
-      url = '/pages/admin/user-list/user-list'
+      url = '/pages/admin/home/home'
     }
     if (url) {
-      wx.reLaunch({ url })
+      // 管理员入口使用 tabBar，需要 switchTab；其他保持 reLaunch
+      if (role === 2) {
+        wx.switchTab({ url })
+      } else {
+        wx.reLaunch({ url })
+      }
     }
   }
 })

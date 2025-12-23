@@ -2,6 +2,7 @@ const { admin } = require('../../../utils/api')
 
 Page({
   data: {
+    welcomeName: '',
     activityList: [],
     page: 1,
     pageSize: 10,
@@ -21,15 +22,14 @@ Page({
       { label: '已结束', value: 2 },
       { label: '已取消', value: 3 }
     ],
-    navTabs: [
-      { key: 'user', label: '用户管理', page: '/pages/admin/user-list/user-list' },
-      { key: 'activity', label: '活动管理', page: '/pages/admin/activity-list/activity-list' }
-    ],
     activeNav: 'activity'
   },
 
-  onLoad() {
-    this.loadActivityList(true)
+  onShow() {
+    this.setWelcomeName()
+    if (!this.data.activityList.length) {
+      this.loadActivityList(true)
+    }
   },
 
   onPullDownRefresh() {
@@ -43,6 +43,12 @@ Page({
     }
   },
 
+  setWelcomeName() {
+    const profile = wx.getStorageSync('userProfile') || {}
+    const name = profile.userName || profile.name
+    this.setData({ welcomeName: name || '管理员' })
+  },
+
   loadActivityList(refresh = false) {
     if (this.data.loading) return
     const nextPage = refresh ? 1 : this.data.page
@@ -52,29 +58,29 @@ Page({
       pageSize: this.data.pageSize,
       ...this.data.searchParams
     }
-    admin.getActivityList(params).then(res => {
-      const records = res.records || []
-      const newList = refresh ? records : [...this.data.activityList, ...records]
-      const total = res.total || newList.length
-      this.setData({
-        activityList: newList,
-        total,
-        page: refresh ? 2 : this.data.page + 1,
-        hasMore: newList.length < total,
-        loading: false,
-        refreshing: false
+    admin.getActivityList(params)
+      .then(res => {
+        const records = res.records || []
+        const newList = refresh ? records : [...this.data.activityList, ...records]
+        const total = res.total || newList.length
+        this.setData({
+          activityList: newList,
+          total,
+          page: refresh ? 2 : this.data.page + 1,
+          hasMore: newList.length < total,
+          loading: false,
+          refreshing: false
+        })
+        if (refresh) wx.stopPullDownRefresh()
       })
-      if (refresh) wx.stopPullDownRefresh()
-    }).catch(() => {
-      this.setData({ loading: false, refreshing: false })
-      if (refresh) wx.stopPullDownRefresh()
-    })
+      .catch(() => {
+        this.setData({ loading: false, refreshing: false })
+        if (refresh) wx.stopPullDownRefresh()
+      })
   },
 
   onSearchInput(e) {
-    this.setData({
-      'searchParams.title': e.detail.value
-    })
+    this.setData({ 'searchParams.title': e.detail.value })
   },
 
   onStatusChange(e) {
@@ -105,9 +111,9 @@ Page({
   },
 
   onNavChange(e) {
-    const { key, page } = e.currentTarget.dataset
-    if (key === this.data.activeNav) return
-    wx.redirectTo({ url: page })
+    const { key } = e.currentTarget.dataset
+    if (key === 'activity') return
+    wx.switchTab({ url: '/pages/admin/user-list/user-list' })
   },
 
   editActivity(e) {
@@ -132,3 +138,4 @@ Page({
     return map[status] || ''
   }
 })
+
