@@ -1,13 +1,37 @@
-<view class="container">
-  <view class="login-header">
+<view class="page">
+  <view class="hero-card">
     <view class="logo">志</view>
-    <text class="title">志愿者活动管理系统</text>
-  </view>
-  <view class="login-form">
-    <view class="login-tip">
-      <text>点击下方按钮，授权获取您的微信头像和昵称</text>
+    <view class="hero-text">
+      <text class="title">志愿者活动管理</text>
+      <text class="subtitle">用一次授权，畅通登录与数据同步</text>
+      <view class="tags">
+        <text class="tag">头像 / 昵称</text>
+        <text class="tag">快速进入</text>
+        <text class="tag">安全存储</text>
+      </view>
     </view>
-    <button class="login-btn" bindtap="handleLogin">微信登录</button>
+  </view>
+
+  <view class="card">
+    <view class="card-title">需要获取的信息</view>
+    <view class="card-list">
+      <view class="item">
+        <view class="dot"></view>
+        <text class="item-text">微信头像与昵称，仅用于身份展示</text>
+      </view>
+      <view class="item">
+        <view class="dot"></view>
+        <text class="item-text">登录凭证（code），用于后台校验</text>
+      </view>
+    </view>
+    <view class="tip">请同意授权后完成登录，我们不会未经允许发布消息。</view>
+    <button class="primary-btn" bindtap="handleLogin">微信授权并登录</button>
+    <view class="footer">
+      <text>点击即同意</text>
+      <text class="link">《用户协议》</text>
+      <text>和</text>
+      <text class="link">《隐私政策》</text>
+    </view>
   </view>
 </view>
 

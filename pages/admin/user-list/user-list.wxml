@@ -1,31 +1,78 @@
-<view class="container">
-  <view class="search-bar">
-    <input class="search-input" placeholder="搜索姓名" value="{{searchParams.name}}" bindinput="onNameInput" />
-    <input class="search-input" placeholder="搜索学院" value="{{searchParams.college}}" bindinput="onCollegeInput" />
-    <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleIndex}}" bindchange="onRoleChange">
-      <view class="role-picker">
-        <text>{{roleOptions[roleIndex].label}}</text>
-        <text class="arrow">▼</text>
-      </view>
-    </picker>
-    <button class="search-btn" bindtap="onSearch">搜索</button>
-  </view>
-  <scroll-view class="user-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
-    <view class="user-item" wx:for="{{userList}}" wx:key="id" bindtap="editUser" data-id="{{item.id}}">
-      <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
-      <view class="user-info">
-        <text class="user-name">{{item.name}}</text>
-        <text class="user-meta">学院：{{item.college || '未设置'}}</text>
-        <text class="user-meta">手机：{{item.phone || '未设置'}}</text>
-        <text class="user-meta">注册时间：{{formatTime(item.createTime)}}</text>
-      </view>
-      <view class="user-role">
-        <text class="role-badge role-{{item.role}}">{{getRoleText(item.role)}}</text>
-      </view>
+<view class="page">
+  <view class="nav-shell">
+    <view class="brand">
+      <text class="brand-title">管理员工作台</text>
+      <text class="brand-sub">集中管理用户与活动</text>
     </view>
+    <view class="nav-tabs">
+      <view class="nav-tab {{activeNav==='user'?'active':''}}" data-key="user" data-page="/pages/admin/user-list/user-list" bindtap="onNavChange">用户管理</view>
+      <view class="nav-tab {{activeNav==='activity'?'active':''}}" data-key="activity" data-page="/pages/admin/activity-list/activity-list" bindtap="onNavChange">活动管理</view>
+    </view>
+  </view>
+
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hero-title">用户管理</text>
+      <text class="hero-sub">快速筛选，点击卡片编辑</text>
+    </view>
+    <view class="hero-actions">
+      <button class="pill-btn ghost" bindtap="onResetFilters">重置</button>
+    </view>
+  </view>
+
+  <view class="card filter-card">
+    <view class="filter-inline">
+      <input class="input pill" placeholder="姓名" value="{{searchParams.name}}" bindinput="onNameInput" />
+      <input class="input pill" placeholder="学院" value="{{searchParams.college}}" bindinput="onCollegeInput" />
+    </view>
+    <view class="filter-inline">
+      <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleIndex}}" bindchange="onRoleChange">
+        <view class="picker pill">
+          <text>{{roleOptions[roleIndex].label}}</text>
+          <text class="chevron">></text>
+        </view>
+      </picker>
+      <button class="pill-btn primary wide" bindtap="onSearch">筛选</button>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <view>
+      <text class="section-title">全部用户</text>
+      <text class="section-sub">共 {{total}} 人</text>
+    </view>
+    <view class="mini-actions">
+      <button class="mini-btn" bindtap="onSearch">刷新</button>
+    </view>
+  </view>
+
+  <scroll-view class="list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="user-card" wx:for="{{userList}}" wx:key="id" data-id="{{item.id}}" bindtap="editUser">
+      <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+      <view class="card-content">
+        <view class="card-row">
+          <text class="name">{{item.name || '未命名'}}</text>
+          <text class="role-tag role-{{item.role}}">{{getRoleText(item.role)}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">学院</text>
+          <text class="meta-value">{{item.college || '未设置'}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">手机</text>
+          <text class="meta-value">{{item.phone || '未设置'}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">注册</text>
+          <text class="meta-value">{{formatTime(item.createTime) || '未记录'}}</text>
+        </view>
+      </view>
+      <text class="card-chevron">&gt;</text>
+    </view>
+
     <view class="load-more" wx:if="{{loading}}">加载中...</view>
     <view class="no-more" wx:if="{{!hasMore && userList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && userList.length === 0}}">暂无用户</view>
   </scroll-view>
-</view>
 
+</view>

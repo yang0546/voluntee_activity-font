@@ -17,12 +17,18 @@ Page({
     ],
     loading: false
   },
+
   onLoad(options) {
-    if (options.id) {
-      this.setData({ userId: options.id })
-      this.loadUser()
+    if (!options.id) {
+      wx.showToast({ title: '仅支持编辑已有用户', icon: 'none' })
+      setTimeout(() => wx.navigateBack(), 800)
+      return
     }
+    this.setData({ userId: options.id })
+    wx.setNavigationBarTitle({ title: '编辑用户' })
+    this.loadUser()
   },
+
   loadUser() {
     wx.showLoading({ title: '加载中...' })
     admin.getUserById(this.data.userId).then(res => {
@@ -37,16 +43,18 @@ Page({
         }
       })
       wx.hideLoading()
-    }).catch(err => {
+    }).catch(() => {
       wx.hideLoading()
     })
   },
+
   onInputChange(e) {
     const { field } = e.currentTarget.dataset
     this.setData({
       [`form.${field}`]: e.detail.value
     })
   },
+
   onRoleChange(e) {
     const index = e.detail.value
     const role = this.data.roleOptions[index].value
@@ -55,27 +63,29 @@ Page({
       'form.role': role
     })
   },
+
   handleSubmit() {
-    const { form } = this.data
+    const { form, userId, loading } = this.data
+    if (loading) return
+    if (!userId) {
+      wx.showToast({ title: '缺少用户ID', icon: 'none' })
+      return
+    }
     if (!form.name) {
       wx.showToast({ title: '请填写姓名', icon: 'none' })
       return
     }
-    wx.showLoading({ title: '更新中...' })
+    wx.showLoading({ title: '保存中...' })
     this.setData({ loading: true })
-    admin.updateUser({
-      id: this.data.userId,
-      ...form
-    }).then(() => {
+    admin.updateUser({ id: userId, ...form }).then(() => {
       wx.hideLoading()
-      wx.showToast({ title: '更新成功', icon: 'success' })
+      wx.showToast({ title: '保存成功', icon: 'success' })
       setTimeout(() => {
         wx.navigateBack()
-      }, 1500)
-    }).catch(err => {
+      }, 1200)
+    }).catch(() => {
       wx.hideLoading()
       this.setData({ loading: false })
     })
   }
 })
-

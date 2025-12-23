@@ -1,33 +1,82 @@
-<view class="container">
-  <view class="search-bar">
-    <input class="search-input" placeholder="搜索活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
-    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
-      <view class="status-picker">
-        <text>{{statusOptions[statusIndex].label}}</text>
-        <text class="arrow">▼</text>
-      </view>
-    </picker>
-    <button class="search-btn" bindtap="onSearch">搜索</button>
+<view class="page">
+  <view class="nav-shell">
+    <view class="brand">
+      <text class="brand-title">管理员工作台</text>
+      <text class="brand-sub">集中管理用户与活动</text>
+    </view>
+    <view class="nav-tabs">
+      <view class="nav-tab {{activeNav==='user'?'active':''}}" data-key="user" data-page="/pages/admin/user-list/user-list" bindtap="onNavChange">用户管理</view>
+      <view class="nav-tab {{activeNav==='activity'?'active':''}}" data-key="activity" data-page="/pages/admin/activity-list/activity-list" bindtap="onNavChange">活动管理</view>
+    </view>
   </view>
-  <scroll-view class="activity-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
-    <view class="activity-item" wx:for="{{activityList}}" wx:key="id" bindtap="editActivity" data-id="{{item.id}}">
-      <view class="activity-header">
-        <text class="activity-title">{{item.title}}</text>
+
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hero-title">活动管理</text>
+      <text class="hero-sub">快速筛选，点击卡片编辑</text>
+    </view>
+    <view class="hero-actions">
+      <button class="pill-btn ghost" bindtap="onResetFilters">重置</button>
+    </view>
+  </view>
+
+  <view class="card filter-card">
+    <view class="filter-inline">
+      <input class="input pill" placeholder="活动标题" value="{{searchParams.title}}" bindinput="onSearchInput" />
+      <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+        <view class="picker pill">
+          <text>{{statusOptions[statusIndex].label}}</text>
+          <text class="chevron">></text>
+        </view>
+      </picker>
+      <button class="pill-btn primary wide" bindtap="onSearch">筛选</button>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <view>
+      <text class="section-title">全部活动</text>
+      <text class="section-sub">共 {{total}} 场</text>
+    </view>
+    <view class="mini-actions">
+      <button class="mini-btn" bindtap="onSearch">刷新</button>
+    </view>
+  </view>
+
+  <scroll-view class="list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+    <view class="activity-card" wx:for="{{activityList}}" wx:key="id" data-id="{{item.id}}" bindtap="editActivity">
+      <view class="card-row">
+        <text class="title">{{item.title}}</text>
         <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
       </view>
-      <text class="activity-desc">{{item.description}}</text>
-      <view class="activity-info">
-        <text class="info-item">📍 {{item.location}}</text>
-        <text class="info-item">⏰ {{formatTime(item.startTime)}}</text>
-        <text class="info-item">👥 {{item.currentPeople}}/{{item.requiredPeople}}</text>
+      <text class="desc">{{item.description}}</text>
+      <view class="meta-grid">
+        <view class="meta">
+          <text class="meta-label">地点</text>
+          <text class="meta-value">{{item.location || '未设置'}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">时间</text>
+          <text class="meta-value">{{formatTime(item.startTime)}} - {{formatTime(item.endTime)}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">报名截止</text>
+          <text class="meta-value">{{formatTime(item.signupDeadline)}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">人数</text>
+          <text class="meta-value">{{item.currentPeople}} / {{item.requiredPeople}}</text>
+        </view>
       </view>
-      <view class="activity-footer">
-        <text class="leader">负责人：{{item.leaderName}}</text>
+      <view class="foot">
+        <text class="leader">负责人：{{item.leaderName || '未设置'}}</text>
+        <text class="card-chevron">&gt;</text>
       </view>
     </view>
+
     <view class="load-more" wx:if="{{loading}}">加载中...</view>
     <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
   </scroll-view>
-</view>
 
+</view>
