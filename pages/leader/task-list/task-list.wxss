@@ -186,15 +186,21 @@
   padding: 20rpx 30rpx;
   border-top: 1rpx solid #eee;
   gap: 20rpx;
+  box-sizing: border-box;
 }
 
 .btn {
   flex: 1;
+  min-width: 0;
   height: 70rpx;
   line-height: 70rpx;
   border-radius: 35rpx;
   font-size: 28rpx;
   border: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-cancel {

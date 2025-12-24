@@ -19,10 +19,6 @@
       <text class="hero-label">欢迎回来</text>
       <text class="hero-title">Hi，{{welcomeName || '管理员'}}</text>
       <text class="hero-sub">查看并管理所有用户，支持筛选与编辑</text>
-      <view class="hero-actions">
-        <button class="ghost-btn" bindtap="onResetFilters">重置筛选</button>
-        <button class="primary-btn" bindtap="onSearch">刷新数据</button>
-      </view>
     </view>
     <view class="hero-stat">
       <text class="stat-label">总用户数</text>
@@ -55,7 +51,10 @@
           </view>
         </picker>
       </view>
-      <button class="primary-btn full" bindtap="onSearch">开始筛选</button>
+      <view class="filter-actions">
+        <button class="primary-btn half" bindtap="onSearch">开始筛选</button>
+        <button class="ghost-btn half" bindtap="onResetFilters">重置筛选</button>
+      </view>
     </view>
   </view>
 
@@ -65,13 +64,12 @@
       <text class="section-title">全部用户</text>
       <text class="section-sub">共 {{total}} 人 · 下拉刷新获取最新</text>
     </view>
-    <button class="ghost-btn sm" bindtap="onSearch">刷新列表</button>
   </view>
 
   <!-- 用户列表 -->
-  <scroll-view class="list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+  <view class="list">
     <view class="user-card" wx:for="{{userList}}" wx:key="id" data-id="{{item.id}}" bindtap="editUser">
-      <view class="role-chip role-{{item.role}}">{{getRoleText(item.role)}}</view>
+      <view class="role-chip role-{{item.role !== undefined && item.role !== null ? item.role : ''}}">{{item.roleText || getRoleText(item.role) || '未知'}}</view>
       <view class="avatar-shell">
         <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
       </view>
@@ -98,5 +96,5 @@
     <view class="load-more" wx:if="{{loading}}">加载中...</view>
     <view class="no-more" wx:if="{{!hasMore && userList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && userList.length === 0}}">暂无用户</view>
-  </scroll-view>
+  </view>
 </view>

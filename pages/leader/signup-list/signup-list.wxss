@@ -130,15 +130,21 @@
 .signup-actions {
   display: flex;
   gap: 20rpx;
+  flex-wrap: wrap;
 }
 
 .btn {
   flex: 1;
+  min-width: 0;
   height: 60rpx;
   line-height: 60rpx;
   border-radius: 30rpx;
   font-size: 28rpx;
   border: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-success {

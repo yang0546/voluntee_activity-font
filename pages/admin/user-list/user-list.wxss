@@ -80,6 +80,12 @@ button::after {
   display: flex;
   justify-content: space-between;
   gap: 20rpx;
+  box-sizing: border-box;
+}
+
+.hero-left {
+  flex: 1;
+  min-width: 0;
 }
 
 .hero-left {
@@ -109,10 +115,22 @@ button::after {
   margin-top: 10rpx;
   display: flex;
   gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.hero-actions .ghost-btn,
+.hero-actions .primary-btn {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hero-stat {
   min-width: 170rpx;
+  max-width: 200rpx;
+  flex-shrink: 0;
   background: linear-gradient(180deg, #f5f7ff 0%, #ebedff 100%);
   border-radius: 18rpx;
   padding: 16rpx;
@@ -122,6 +140,7 @@ button::after {
   flex-direction: column;
   gap: 6rpx;
   color: #1f2937;
+  box-sizing: border-box;
 }
 
 .stat-label {
@@ -146,6 +165,11 @@ button::after {
   border-radius: 14rpx;
   font-size: 26rpx;
   padding: 16rpx 22rpx;
+  box-sizing: border-box;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .primary-btn {
@@ -209,8 +233,15 @@ button::after {
   gap: 14rpx;
 }
 
-.filter-grid .primary-btn.full {
+.filter-actions {
   grid-column: span 2;
+  display: flex;
+  gap: 14rpx;
+}
+
+.filter-actions .half {
+  flex: 1;
+  min-width: 0;
 }
 
 .field {
@@ -257,6 +288,12 @@ button::after {
   justify-content: space-between;
   align-items: center;
   color: #111827;
+  gap: 12rpx;
+}
+
+.section-head .ghost-btn {
+  flex-shrink: 0;
+  max-width: 200rpx;
 }
 
 .section-title {
@@ -271,7 +308,6 @@ button::after {
 
 .list {
   margin-top: 6rpx;
-  max-height: calc(100vh - 500rpx);
   padding-bottom: 40rpx;
 }
 
@@ -375,6 +411,59 @@ button::after {
   border-radius: 999rpx;
   font-size: 22rpx;
   font-weight: 600;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.role-chip.role-0 {
+  background: #e0f2fe;
+  color: #0ea5e9;
+}
+
+.role-chip.role-1 {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.role-chip.role-2 {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.role-chip.role-undefined,
+.role-chip.role-null,
+.role-chip.role- {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.role-text {
+  font-weight: 600;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  display: inline-block;
+}
+
+.role-text.role-0 {
+  background: #e0f2fe;
+  color: #0ea5e9;
+}
+
+.role-text.role-1 {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.role-text.role-2 {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.role-text.role-undefined,
+.role-text.role-null,
+.role-text.role- {
+  background: #f3f4f6;
+  color: #6b7280;
 }
 
 .load-more,

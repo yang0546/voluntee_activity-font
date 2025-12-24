@@ -27,9 +27,16 @@ Page({
 
   onShow() {
     this.setWelcomeName()
-    if (!this.data.activityList.length) {
+    // 每次显示页面时都刷新数据，确保能看到最新修改
+    this.setData({ 
+      page: 1, 
+      hasMore: true,
+      loading: false  // 清除loading状态，确保可以刷新
+    })
+    // 使用setTimeout确保页面完全显示后再刷新
+    setTimeout(() => {
       this.loadActivityList(true)
-    }
+    }, 100)
   },
 
   onPullDownRefresh() {
@@ -50,7 +57,8 @@ Page({
   },
 
   loadActivityList(refresh = false) {
-    if (this.data.loading) return
+    // 如果是刷新操作，允许即使loading为true也继续执行
+    if (this.data.loading && !refresh) return
     const nextPage = refresh ? 1 : this.data.page
     this.setData({ loading: true, refreshing: refresh })
     const params = {
@@ -60,7 +68,24 @@ Page({
     }
     admin.getActivityList(params)
       .then(res => {
-        const records = res.records || []
+        const records = (res.records || []).map(item => {
+          // 确保时间字段被正确格式化
+          const startTimeDisplay = this.formatTime(item.startTime)
+          const endTimeDisplay = this.formatTime(item.endTime)
+          const deadlineDisplay = this.formatTime(item.signupDeadline)
+          
+          // 调试日志
+          if (item.startTime && !startTimeDisplay) {
+            console.warn('时间格式化失败 - startTime:', item.startTime, 'result:', startTimeDisplay)
+          }
+          
+          return {
+            ...item,
+            startTimeDisplay: startTimeDisplay,
+            endTimeDisplay: endTimeDisplay,
+            deadlineDisplay: deadlineDisplay
+          }
+        })
         const newList = refresh ? records : [...this.data.activityList, ...records]
         const total = res.total || newList.length
         this.setData({
@@ -124,8 +149,62 @@ Page({
   },
 
   formatTime(time) {
-    if (!time) return ''
-    return time.replace('T', ' ')
+    if (!time || time === null || time === undefined || time === '') {
+      return '未设置'
+    }
+    try {
+      // 处理字符串时间
+      let timeStr = String(time).trim()
+      if (!timeStr || timeStr === 'null' || timeStr === 'undefined') {
+        return '未设置'
+      }
+      
+      // 如果格式是 "YYYY-MM-DD HH:mm:ss"，直接截取前16位显示
+      const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
+      if (dateTimeRegex.test(timeStr)) {
+        return timeStr.substring(0, 16) // 返回 "YYYY-MM-DD HH:mm"
+      }
+      
+      // 如果格式是 "YYYY-MM-DD HH:mm"，直接返回
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timeStr)) {
+        return timeStr
+      }
+      
+      // 如果包含T，先替换为空格
+      if (timeStr.includes('T')) {
+        timeStr = timeStr.replace('T', ' ')
+        // 替换后再次检查格式
+        if (dateTimeRegex.test(timeStr)) {
+          return timeStr.substring(0, 16)
+        }
+      }
+      
+      // 尝试解析为Date对象
+      const date = new Date(time)
+      if (!isNaN(date.getTime()) && date.getTime() > 0) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        return `${year}-${month}-${day} ${hour}:${minute}`
+      }
+      
+      // 如果解析失败，尝试简单格式化字符串（截取前16位）
+      if (timeStr.length >= 16) {
+        return timeStr.substring(0, 16)
+      }
+      // 如果字符串太短，尝试返回原值
+      return timeStr || '未设置'
+    } catch (e) {
+      console.error('formatTime error:', e, 'time:', time)
+      // 如果出错，尝试简单处理
+      const timeStr = String(time).replace('T', ' ').trim()
+      if (timeStr.length >= 16) {
+        return timeStr.substring(0, 16)
+      }
+      return timeStr || '未设置'
+    }
   },
 
   getStatusText(status) {

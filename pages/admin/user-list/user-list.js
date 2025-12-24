@@ -27,14 +27,25 @@ Page({
 
   onShow() {
     this.setWelcomeName()
-    if (!this.data.userList.length) {
+    // 每次显示页面时都刷新数据，确保能看到最新修改
+    this.setData({ 
+      page: 1, 
+      hasMore: true,
+      loading: false  // 清除loading状态，确保可以刷新
+    })
+    // 使用setTimeout确保页面完全显示后再刷新
+    setTimeout(() => {
       this.loadUserList(true)
-    }
+    }, 100)
   },
 
   onPullDownRefresh() {
     this.setData({ page: 1, hasMore: true })
     this.loadUserList(true)
+  },
+
+  onPageScroll() {
+    // 页面滚动处理
   },
 
   setWelcomeName() {
@@ -50,7 +61,8 @@ Page({
   },
 
   loadUserList(refresh = false) {
-    if (this.data.loading) return
+    // 如果是刷新操作，允许即使loading为true也继续执行
+    if (this.data.loading && !refresh) return
     const nextPage = refresh ? 1 : this.data.page
     this.setData({ loading: true, refreshing: refresh })
     const params = {
@@ -59,7 +71,28 @@ Page({
       ...this.data.searchParams
     }
     admin.getUserList(params).then(res => {
-      const records = res.records || []
+      const records = (res.records || []).map(item => {
+        // 确保 role 字段被正确处理
+        const role = item.role !== undefined && item.role !== null ? item.role : ''
+        const roleText = this.getRoleText(role)
+        
+        // 调试日志
+        if (!roleText || roleText === '未知') {
+          console.warn('用户角色信息:', {
+            id: item.id,
+            name: item.name || item.userName,
+            role: item.role,
+            roleType: typeof item.role,
+            roleText: roleText
+          })
+        }
+        
+        return {
+          ...item,
+          role: role,
+          roleText: roleText
+        }
+      })
       const newList = refresh ? records : [...this.data.userList, ...records]
       const total = res.total || newList.length
       this.setData({
@@ -126,12 +159,51 @@ Page({
   },
 
   formatTime(time) {
-    if (!time) return ''
-    return time.replace('T', ' ')
+    if (!time || time === null || time === undefined || time === '') return '未记录'
+    try {
+      // 处理字符串时间
+      let timeStr = String(time)
+      // 如果包含T，先替换
+      if (timeStr.includes('T')) {
+        timeStr = timeStr.replace('T', ' ')
+      }
+      // 尝试解析为Date对象
+      const date = new Date(time)
+      if (!isNaN(date.getTime()) && date.getTime() > 0) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        return `${year}-${month}-${day} ${hour}:${minute}`
+      }
+      // 如果解析失败，尝试简单格式化字符串
+      if (timeStr.length >= 16) {
+        return timeStr.substring(0, 16)
+      }
+      return timeStr || '未记录'
+    } catch (e) {
+      // 如果出错，尝试简单处理
+      const timeStr = String(time).replace('T', ' ')
+      return timeStr.length >= 16 ? timeStr.substring(0, 16) : (timeStr || '未记录')
+    }
   },
 
   getRoleText(role) {
+    // 处理各种可能的 role 值
+    if (role === null || role === undefined || role === '' || role === 'null' || role === 'undefined') {
+      return '未知'
+    }
+    // 转换为数字进行比较
+    const roleNum = Number(role)
     const map = { 0: '志愿者', 1: '负责人', 2: '管理员' }
-    return map[role] || '未知'
+    if (map.hasOwnProperty(roleNum)) {
+      return map[roleNum]
+    }
+    // 如果 role 是字符串形式的数字
+    if (map.hasOwnProperty(role)) {
+      return map[role]
+    }
+    return '未知'
   }
 })

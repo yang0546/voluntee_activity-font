@@ -20,10 +20,6 @@
       <text class="hero-label">欢迎回来</text>
       <text class="hero-title">Hi，{{welcomeName || '管理员'}}</text>
       <text class="hero-sub">查看并管理所有活动，支持筛选与编辑</text>
-      <view class="hero-actions">
-        <button class="ghost-btn" bindtap="onResetFilters">重置筛选</button>
-        <button class="primary-btn" bindtap="onSearch">刷新数据</button>
-      </view>
     </view>
     <view class="hero-stat">
       <text class="stat-label">总活动数</text>
@@ -52,7 +48,10 @@
           </view>
         </picker>
       </view>
-      <button class="primary-btn full" bindtap="onSearch">开始筛选</button>
+      <view class="filter-actions">
+        <button class="primary-btn half" bindtap="onSearch">开始筛选</button>
+        <button class="ghost-btn half" bindtap="onResetFilters">重置筛选</button>
+      </view>
     </view>
   </view>
 
@@ -62,11 +61,10 @@
       <text class="section-title">全部活动</text>
       <text class="section-sub">共 {{total}} 场 · 下拉刷新获取最新</text>
     </view>
-    <button class="ghost-btn sm" bindtap="onSearch">刷新列表</button>
   </view>
 
   <!-- 活动列表 -->
-  <scroll-view class="list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
+  <view class="list">
     <view class="activity-card" wx:for="{{activityList}}" wx:key="id" data-id="{{item.id}}" bindtap="editActivity">
       <view class="card-row">
         <view class="title-wrap">
@@ -78,16 +76,16 @@
 
       <view class="meta-grid">
         <view class="meta">
-          <text class="meta-label">时间</text>
-          <text class="meta-value">{{formatTime(item.startTime)}} - {{formatTime(item.endTime)}}</text>
+          <text class="meta-label">开始时间</text>
+          <text class="meta-value time-value">{{item.startTimeDisplay || '未设置'}}</text>
         </view>
         <view class="meta">
           <text class="meta-label">地点</text>
           <text class="meta-value">{{item.location || '未设置'}}</text>
         </view>
         <view class="meta">
-          <text class="meta-label">截止</text>
-          <text class="meta-value">{{formatTime(item.signupDeadline) || '未设置'}}</text>
+          <text class="meta-label">报名截止</text>
+          <text class="meta-value time-value">{{item.deadlineDisplay || '未设置'}}</text>
         </view>
         <view class="meta">
           <text class="meta-label">人数</text>
@@ -104,6 +102,6 @@
     <view class="load-more" wx:if="{{loading}}">加载中...</view>
     <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
-  </scroll-view>
+  </view>
 </view>
 

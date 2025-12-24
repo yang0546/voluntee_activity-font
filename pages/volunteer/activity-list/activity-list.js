@@ -168,10 +168,16 @@ Page({
   },
   decorateActivity(item) {
     const isSignupClosed = this.isDeadlinePassed(item.signupDeadline)
+    const startTimeDisplay = this.formatTime(item.startTime)
+    const deadlineDisplay = this.formatTime(item.signupDeadline)
+    // 调试：确保时间被正确格式化
+    if (item.startTime && !startTimeDisplay) {
+      console.warn('时间格式化失败:', item.startTime)
+    }
     return {
       ...item,
-      startTimeDisplay: this.formatTime(item.startTime),
-      deadlineDisplay: this.formatTime(item.signupDeadline),
+      startTimeDisplay: startTimeDisplay || '未设置',
+      deadlineDisplay: deadlineDisplay || '未设置',
       isSignupClosed
     }
   },
@@ -224,8 +230,43 @@ Page({
     })
   },
   formatTime(time) {
-    if (!time) return ''
-    return time.replace('T', ' ')
+    if (!time || time === null || time === undefined || time === '') return ''
+    try {
+      // 处理字符串时间
+      let timeStr = String(time).trim()
+      if (!timeStr) return ''
+      
+      // 如果格式是 "YYYY-MM-DD HH:mm:ss"，直接截取前16位显示
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(timeStr)) {
+        return timeStr.substring(0, 16) // 返回 "YYYY-MM-DD HH:mm"
+      }
+      
+      // 如果包含T，先替换为空格
+      if (timeStr.includes('T')) {
+        timeStr = timeStr.replace('T', ' ')
+      }
+      
+      // 尝试解析为Date对象
+      const date = new Date(time)
+      if (!isNaN(date.getTime()) && date.getTime() > 0) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hour = String(date.getHours()).padStart(2, '0')
+        const minute = String(date.getMinutes()).padStart(2, '0')
+        return `${year}-${month}-${day} ${hour}:${minute}`
+      }
+      
+      // 如果解析失败，尝试简单格式化字符串（截取前16位）
+      if (timeStr.length >= 16) {
+        return timeStr.substring(0, 16)
+      }
+      return timeStr
+    } catch (e) {
+      // 如果出错，尝试简单处理
+      const timeStr = String(time).replace('T', ' ').trim()
+      return timeStr.length >= 16 ? timeStr.substring(0, 16) : timeStr
+    }
   },
   isDeadlinePassed(time) {
     if (!time) return false

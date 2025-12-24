@@ -19,12 +19,12 @@
       </view>
       <text class="activity-desc">{{item.description}}</text>
       <view class="activity-info">
-        <text class="info-item">📍 {{item.location}}</text>
-        <text class="info-item">⏰ {{formatTime(item.startTime)}}</text>
-        <text class="info-item">👥 {{item.currentPeople}}/{{item.requiredPeople}}</text>
+        <text class="info-item">📍 {{item.location || '未设置'}}</text>
+        <text class="info-item">⏰ {{formatTime(item.startTime) || '未设置'}}</text>
+        <text class="info-item">👥 {{item.currentPeople || 0}}/{{item.requiredPeople || 0}}</text>
       </view>
       <view class="activity-footer">
-        <text class="deadline">截止：{{formatTime(item.signupDeadline)}}</text>
+        <text class="deadline">截止：{{formatTime(item.signupDeadline) || '未设置'}}</text>
       </view>
       <view class="item-actions">
         <button class="outline-btn" size="mini" data-id="{{item.id}}" catchtap="viewActivityDetail">详情</button>

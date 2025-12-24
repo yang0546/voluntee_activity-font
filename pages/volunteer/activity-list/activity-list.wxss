@@ -1,5 +1,5 @@
 .container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #ecf3ff 0%, #f8fbff 45%, #f7f7f7 100%);
