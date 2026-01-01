@@ -76,21 +76,25 @@ Page({
         const role = item.role !== undefined && item.role !== null ? item.role : ''
         const roleText = this.getRoleText(role)
         
-        // 调试日志
-        if (!roleText || roleText === '未知') {
-          console.warn('用户角色信息:', {
-            id: item.id,
-            name: item.name || item.userName,
-            role: item.role,
-            roleType: typeof item.role,
-            roleText: roleText
-          })
-        }
+        // 处理注册时间字段，兼容 createTime 和 creatTime（后端可能拼写错误）
+        const createTimeRaw = item.createTime || item.creatTime || null
+        // 直接格式化时间，而不是在模板中调用方法
+        const createTimeFormatted = this.formatDate(createTimeRaw)
+        
+        // 调试日志 - 检查注册时间字段
+        console.log('用户数据:', {
+          id: item.id,
+          name: item.name || item.userName,
+          createTimeRaw: createTimeRaw,
+          createTimeFormatted: createTimeFormatted,
+          itemKeys: Object.keys(item)
+        })
         
         return {
           ...item,
           role: role,
-          roleText: roleText
+          roleText: roleText,
+          createTime: createTimeFormatted  // 使用格式化后的时间
         }
       })
       const newList = refresh ? records : [...this.data.userList, ...records]
@@ -186,6 +190,68 @@ Page({
       // 如果出错，尝试简单处理
       const timeStr = String(time).replace('T', ' ')
       return timeStr.length >= 16 ? timeStr.substring(0, 16) : (timeStr || '未记录')
+    }
+  },
+
+  formatDate(time) {
+    // 只返回年月日格式：YYYY-MM-DD
+    if (!time || time === null || time === undefined || time === '') {
+      return '未记录'
+    }
+    try {
+      // 处理字符串时间
+      let timeStr = String(time).trim()
+      if (!timeStr || timeStr === 'null' || timeStr === 'undefined') {
+        return '未记录'
+      }
+      
+      // 优先处理ISO格式：2025-12-23T12:40:44，直接提取日期部分
+      if (timeStr.includes('T')) {
+        const datePart = timeStr.split('T')[0]
+        // 验证格式是否为 YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+          return datePart
+        }
+      }
+      
+      // 处理标准格式：YYYY-MM-DD 或 YYYY-MM-DD HH:mm:ss
+      if (/^\d{4}-\d{2}-\d{2}/.test(timeStr)) {
+        // 直接截取前10位，即 YYYY-MM-DD
+        return timeStr.substring(0, 10)
+      }
+      
+      // 尝试解析为Date对象并格式化为 YYYY-MM-DD
+      const date = new Date(time)
+      if (!isNaN(date.getTime()) && date.getTime() > 0) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+      
+      // 如果以上都失败，尝试截取前10位
+      if (timeStr.length >= 10) {
+        return timeStr.substring(0, 10)
+      }
+      
+      return '未记录'
+    } catch (e) {
+      // 出错时尝试简单处理
+      try {
+        const timeStr = String(time).trim()
+        if (timeStr.includes('T')) {
+          const datePart = timeStr.split('T')[0]
+          if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+            return datePart
+          }
+        }
+        if (timeStr.length >= 10) {
+          return timeStr.substring(0, 10)
+        }
+      } catch (e2) {
+        // 忽略错误
+      }
+      return '未记录'
     }
   },
 

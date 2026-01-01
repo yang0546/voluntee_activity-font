@@ -58,7 +58,7 @@ button::after {
 .input,
 .picker-view,
 .textarea {
-  width: 100%;
+  width: 90%;
   padding: 0 22rpx;
   border-radius: 18rpx;
   background: #f4f6fb;

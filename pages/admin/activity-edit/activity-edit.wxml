@@ -22,8 +22,10 @@
 
     <view class="form-row">
       <view class="form-item half">
-        <text class="label">负责人ID *</text>
-        <input class="input" type="number" placeholder="请输入负责人用户ID" value="{{form.leaderId}}" data-field="leaderId" bindinput="onInputChange" />
+        <text class="label">负责人 *</text>
+        <picker mode="selector" range="{{leaderList}}" range-key="name" value="{{leaderIndex}}" bindchange="onLeaderChange">
+          <view class="picker-view">{{leaderList.length > 0 && leaderList[leaderIndex] ? leaderList[leaderIndex].name : '请选择负责人'}}</view>
+        </picker>
       </view>
       <view class="form-item half">
         <text class="label">活动状态</text>
@@ -36,14 +38,14 @@
     <view class="form-row">
       <view class="form-item half">
         <text class="label">开始日期 *</text>
-        <picker mode="date" value="{{form.startTime ? form.startTime.split('T')[0] : ''}}" data-field="startTime" bindchange="onDateChange">
-          <view class="picker-view">{{form.startTime ? form.startTime.split('T')[0] : '请选择日期'}}</view>
+        <picker mode="date" value="{{startDate}}" data-field="startTime" bindchange="onDateChange">
+          <view class="picker-view">{{startDate || '请选择日期'}}</view>
         </picker>
       </view>
       <view class="form-item half">
         <text class="label">开始时间 *</text>
-        <picker mode="time" value="{{form.startTime ? form.startTime.split('T')[1] : ''}}" data-field="startTime" bindchange="onTimeChange">
-          <view class="picker-view">{{form.startTime ? form.startTime.split('T')[1] : '请选择时间'}}</view>
+        <picker mode="time" value="{{startTime}}" data-field="startTime" bindchange="onTimeChange">
+          <view class="picker-view">{{startTime || '请选择时间'}}</view>
         </picker>
       </view>
     </view>
@@ -51,14 +53,14 @@
     <view class="form-row">
       <view class="form-item half">
         <text class="label">结束日期 *</text>
-        <picker mode="date" value="{{form.endTime ? form.endTime.split('T')[0] : ''}}" data-field="endTime" bindchange="onDateChange">
-          <view class="picker-view">{{form.endTime ? form.endTime.split('T')[0] : '请选择日期'}}</view>
+        <picker mode="date" value="{{endDate}}" data-field="endTime" bindchange="onDateChange">
+          <view class="picker-view">{{endDate || '请选择日期'}}</view>
         </picker>
       </view>
       <view class="form-item half">
         <text class="label">结束时间 *</text>
-        <picker mode="time" value="{{form.endTime ? form.endTime.split('T')[1] : ''}}" data-field="endTime" bindchange="onTimeChange">
-          <view class="picker-view">{{form.endTime ? form.endTime.split('T')[1] : '请选择时间'}}</view>
+        <picker mode="time" value="{{endTime}}" data-field="endTime" bindchange="onTimeChange">
+          <view class="picker-view">{{endTime || '请选择时间'}}</view>
         </picker>
       </view>
     </view>
@@ -66,14 +68,14 @@
     <view class="form-row">
       <view class="form-item half">
         <text class="label">报名截止日期 *</text>
-        <picker mode="date" value="{{form.signupDeadline ? form.signupDeadline.split('T')[0] : ''}}" data-field="signupDeadline" bindchange="onDateChange">
-          <view class="picker-view">{{form.signupDeadline ? form.signupDeadline.split('T')[0] : '请选择日期'}}</view>
+        <picker mode="date" value="{{deadlineDate}}" data-field="signupDeadline" bindchange="onDateChange">
+          <view class="picker-view">{{deadlineDate || '请选择日期'}}</view>
         </picker>
       </view>
       <view class="form-item half">
         <text class="label">报名截止时间 *</text>
-        <picker mode="time" value="{{form.signupDeadline ? form.signupDeadline.split('T')[1] : ''}}" data-field="signupDeadline" bindchange="onTimeChange">
-          <view class="picker-view">{{form.signupDeadline ? form.signupDeadline.split('T')[1] : '请选择时间'}}</view>
+        <picker mode="time" value="{{deadlineTime}}" data-field="signupDeadline" bindchange="onTimeChange">
+          <view class="picker-view">{{deadlineTime || '请选择时间'}}</view>
         </picker>
       </view>
     </view>
@@ -85,7 +87,7 @@
       </view>
       <view class="form-item half">
         <text class="label">当前人数</text>
-        <input class="input" type="number" placeholder="当前已加入人数" value="{{form.currentPeople}}" data-field="currentPeople" bindinput="onInputChange" />
+        <input class="input" type="number" placeholder="当前已加入人数" value="{{form.currentPeople !== '' && form.currentPeople !== null && form.currentPeople !== undefined ? form.currentPeople : '0'}}" data-field="currentPeople" bindinput="onInputChange" />
       </view>
     </view>
 

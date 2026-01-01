@@ -8,8 +8,9 @@
       <text class="nav-sub">用户管理</text>
     </view>
     <view class="nav-tabs">
-      <view class="nav-tab active">用户管理</view>
       <view class="nav-tab" data-key="activity" bindtap="onNavChange">活动广场</view>
+      <view class="nav-tab active">用户管理</view>
+      
     </view>
   </view>
 
@@ -23,7 +24,6 @@
     <view class="hero-stat">
       <text class="stat-label">总用户数</text>
       <text class="stat-value">{{total}}</text>
-      <text class="stat-tip">下拉即可刷新</text>
     </view>
   </view>
 
@@ -62,7 +62,6 @@
   <view class="section-head">
     <view>
       <text class="section-title">全部用户</text>
-      <text class="section-sub">共 {{total}} 人 · 下拉刷新获取最新</text>
     </view>
   </view>
 
@@ -87,7 +86,7 @@
         </view>
         <view class="meta-row">
           <text class="meta-label">注册时间</text>
-          <text class="meta-value">{{formatTime(item.createTime) || '未记录'}}</text>
+          <text class="meta-value">{{item.createTime || '未记录'}}</text>
         </view>
       </view>
       <text class="card-chevron">›</text>

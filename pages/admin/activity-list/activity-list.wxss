@@ -128,7 +128,7 @@ button::after {
 }
 
 .hero-stat {
-  min-width: 170rpx;
+  min-width: 100rpx;
   max-width: 200rpx;
   flex-shrink: 0;
   background: linear-gradient(180deg, #f5f7ff 0%, #ebedff 100%);

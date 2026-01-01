@@ -9,8 +9,8 @@
       <text class="nav-sub">活动广场</text>
     </view>
     <view class="nav-tabs">
-      <view class="nav-tab" data-key="user" bindtap="onNavChange">用户管理</view>
       <view class="nav-tab active">活动广场</view>
+      <view class="nav-tab" data-key="user" bindtap="onNavChange">用户管理</view>
     </view>
   </view>
 
@@ -24,7 +24,6 @@
     <view class="hero-stat">
       <text class="stat-label">总活动数</text>
       <text class="stat-value">{{total}}</text>
-      <text class="stat-tip">下拉即可刷新</text>
     </view>
   </view>
 
@@ -59,7 +58,6 @@
   <view class="section-head">
     <view>
       <text class="section-title">全部活动</text>
-      <text class="section-sub">共 {{total}} 场 · 下拉刷新获取最新</text>
     </view>
   </view>
 

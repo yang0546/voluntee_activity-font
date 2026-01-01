@@ -11,8 +11,12 @@ const admin = {
   updateUser: (data) => request({ url: '/admin/user/update', method: 'PUT', data }),
   // 根据ID查询用户信息
   getUserById: (id) => request({ url: `/admin/user/${id}`, method: 'GET' }),
+  // 获取所有活动负责人列表
+  getLeaderList: () => request({ url: '/admin/user/leaderList', method: 'GET' }),
   // 获取所有活动信息
   getActivityList: (params) => request({ url: '/admin/activity/list', method: 'GET', data: params }),
+  // 根据ID查询活动信息
+  getActivityById: (id) => request({ url: `/admin/activity/${id}`, method: 'GET' }),
   // 更新活动信息
   updateActivity: (data) => request({ url: '/admin/activity/update', method: 'PUT', data })
 }
