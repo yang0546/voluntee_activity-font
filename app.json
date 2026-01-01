@@ -1,21 +1,24 @@
 {
   "pages": [
     "pages/login/login",
-    "pages/admin/home/home",
-    "pages/volunteer/activity-list/activity-list",
-    "pages/volunteer/activity-detail/activity-detail",
-    "pages/volunteer/task-list/task-list",
-    "pages/volunteer/signup-records/signup-records",
+    "pages/leader/home/home",
+    "pages/leader/my-activities/my-activities",
+    "pages/leader/signup-audit/signup-audit",
     "pages/leader/activity-list/activity-list",
     "pages/leader/activity-create/activity-create",
     "pages/leader/activity-detail/activity-detail",
     "pages/leader/activity-edit/activity-edit",
     "pages/leader/signup-list/signup-list",
     "pages/leader/task-list/task-list",
+    "pages/admin/home/home",
     "pages/admin/user-list/user-list",
     "pages/admin/user-edit/user-edit",
     "pages/admin/activity-list/activity-list",
-    "pages/admin/activity-edit/activity-edit"
+    "pages/admin/activity-edit/activity-edit",
+    "pages/volunteer/activity-list/activity-list",
+    "pages/volunteer/activity-detail/activity-detail",
+    "pages/volunteer/task-list/task-list",
+    "pages/volunteer/signup-records/signup-records"
   ],
   "window": {
     "navigationBarTitleText": "志愿者活动管理",

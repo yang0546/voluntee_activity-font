@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "活动审核",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "leader-tabbar": "/components/leader-tabbar/leader-tabbar"
+  }
+}
+

@@ -1,0 +1,234 @@
+.page {
+  min-height: 100vh;
+  background: #f6f7fb;
+  padding: 24rpx 20rpx 120rpx;
+  box-sizing: border-box;
+  position: relative;
+}
+
+button::after {
+  border: none;
+}
+
+.top-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 280rpx;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 40%, #dc2626 100%);
+  border-radius: 0 0 32rpx 32rpx;
+  z-index: 0;
+}
+
+.nav-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 4rpx;
+  color: #f9fbff;
+}
+
+.nav-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+.card {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 22rpx;
+  box-shadow: 0 14rpx 30rpx rgba(64, 73, 118, 0.12);
+  margin-top: 18rpx;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  margin-bottom: 14rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111827;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.field-label {
+  font-size: 22rpx;
+  color: #6b7280;
+}
+
+.picker {
+  height: 76rpx;
+  border-radius: 14rpx;
+  border: 1rpx solid #e5e7eb;
+  background: #f8fafc;
+  padding: 0 18rpx;
+  font-size: 26rpx;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chevron {
+  color: #9ca3af;
+}
+
+.list {
+  margin-top: 18rpx;
+  padding-bottom: 40rpx;
+}
+
+.signup-item {
+  background: #ffffff;
+  border-radius: 18rpx;
+  padding: 24rpx;
+  margin-bottom: 14rpx;
+  box-shadow: 0 10rpx 24rpx rgba(64, 73, 118, 0.08);
+  border: 1rpx solid #eef1f5;
+}
+
+.signup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.user-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+}
+
+.signup-time {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.status-badge {
+  padding: 8rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.status-approved {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-rejected {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.meta-row {
+  display: flex;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.meta-label {
+  width: 120rpx;
+  color: #999;
+}
+
+.meta-value {
+  flex: 1;
+  color: #444;
+}
+
+.audit-actions {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.btn {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  text-align: center;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-approve {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: #fff;
+}
+
+.btn-reject {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: #fff;
+}
+
+.reject-reason {
+  margin-top: 12rpx;
+  padding: 12rpx 14rpx;
+  background: #fef2f2;
+  border: 1rpx solid #fecdd3;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.reason-label {
+  font-size: 24rpx;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.reason-text {
+  font-size: 24rpx;
+  color: #7f1d1d;
+}
+
+.load-more,
+.no-more,
+.empty {
+  text-align: center;
+  padding: 40rpx;
+  font-size: 28rpx;
+  color: #9ca3af;
+}
+

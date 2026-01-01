@@ -1,66 +1,90 @@
-// pages/leader/activity-detail/activity-detail.js
+const { leader } = require('../../../utils/api')
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    activityId: null,
+    loading: true,
+    detail: null
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    const { id } = options || {}
+    if (!id) {
+      wx.showToast({ title: '缺少活动ID', icon: 'none' })
+      setTimeout(() => wx.navigateBack(), 800)
+      return
+    }
+    this.setData({ activityId: id })
+    this.loadDetail(id)
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh() {
-
+    if (this.data.activityId) {
+      this.loadDetail(this.data.activityId, true)
+    } else {
+      wx.stopPullDownRefresh()
+    }
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  loadDetail(id, fromPullDown = false) {
+    this.setData({ loading: true })
+    leader.getActivityById(id).then(res => {
+      const data = (res && res.data) || res || {}
+      const parsed = this.parseActivity(data)
+      this.setData({ detail: parsed, loading: false })
+    }).catch(() => {
+      this.setData({ loading: false })
+      wx.showToast({ title: '获取活动详情失败', icon: 'none' })
+    }).finally(() => {
+      if (fromPullDown) wx.stopPullDownRefresh()
+    })
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
+  parseActivity(activity) {
+    const statusMap = {
+      0: { text: '未开始', cls: 'status-0' },
+      1: { text: '进行中', cls: 'status-1' },
+      2: { text: '已结束', cls: 'status-2' },
+      3: { text: '已取消', cls: 'status-3' }
+    }
+    const statusInfo = statusMap[activity.status] || { text: '未知', cls: 'status-2' }
+    return {
+      ...activity,
+      startTimeDisplay: this.formatDateTime(activity.startTime),
+      endTimeDisplay: this.formatDateTime(activity.endTime),
+      signupDeadlineDisplay: this.formatDateTime(activity.signupDeadline),
+      statusText: statusInfo.text,
+      statusClass: statusInfo.cls
+    }
+  },
 
+  formatDateTime(time) {
+    if (!time && time !== 0) return '未设置'
+    try {
+      let str = String(time).replace('T', ' ').trim()
+      if (!str || str === 'null' || str === 'undefined') return '未设置'
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) {
+        return str.substring(0, 16)
+      }
+      const date = new Date(str)
+      if (!isNaN(date.getTime()) && date.getTime() > 0) {
+        const y = date.getFullYear()
+        const m = String(date.getMonth() + 1).padStart(2, '0')
+        const d = String(date.getDate()).padStart(2, '0')
+        const h = String(date.getHours()).padStart(2, '0')
+        const mi = String(date.getMinutes()).padStart(2, '0')
+        return `${y}-${m}-${d} ${h}:${mi}`
+      }
+      return str.length >= 16 ? str.substring(0, 16) : str
+    } catch (e) {
+      return '未设置'
+    }
+  },
+
+  goEdit() {
+    if (!this.data.activityId) return
+    wx.navigateTo({
+      url: `/pages/leader/activity-edit/activity-edit?id=${this.data.activityId}`
+    })
   }
 })

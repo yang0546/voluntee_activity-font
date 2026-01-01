@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="top-bg"></view>
+
+  <view class="nav-bar">
+    <view class="nav-left">
+      <text class="nav-title">活动审核</text>
+    </view>
+  </view>
+
+  <view class="card filter-card">
+    <view class="card-header">
+      <text class="card-title">筛选条件</text>
+    </view>
+    <view class="filter-field">
+      <text class="field-label">审核状态</text>
+      <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+        <view class="picker">
+          <text>{{statusOptions[statusIndex].label}}</text>
+          <text class="chevron">⌄</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="list">
+    <view class="signup-item" wx:for="{{signupList}}" wx:key="id">
+      <view class="signup-header">
+        <view class="user-info">
+          <text class="user-name">{{item.userName || '未设置姓名'}}</text>
+          <text class="signup-time">报名时间: {{item.signupTimeDisplay || '未设置'}}</text>
+          <text class="signup-time">活动: {{item.title || '未设置'}}</text>
+        </view>
+        <text class="status-badge {{item.statusClass}}">{{item.statusText}}</text>
+      </view>
+
+      <view class="reject-reason" wx:if="{{item.status === 2}}">
+        <text class="reason-label">拒绝原因:</text>
+        <text class="reason-text">{{item.rejectReason}}</text>
+      </view>
+
+      <view class="audit-actions" wx:if="{{item.status === 0}}">
+        <button class="btn btn-approve" data-id="{{item.signupId || item.id}}" data-status="1" bindtap="auditSignup">通过</button>
+        <button class="btn btn-reject" data-id="{{item.signupId || item.id}}" data-status="2" bindtap="auditSignup">拒绝</button>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && signupList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && signupList.length === 0}}">暂无报名记录</view>
+  </view>
+  <leader-tabbar current="audit" />
+</view>

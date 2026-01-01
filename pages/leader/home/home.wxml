@@ -1,0 +1,56 @@
+<view class="page">
+  <view class="top-bg"></view>
+
+  <view class="nav-bar">
+    <view class="nav-left">
+      <text class="nav-title">负责人工作台</text>
+      <text class="nav-sub">首页</text>
+    </view>
+  </view>
+
+  <view class="hero-card">
+    <view class="hero-left">
+      <text class="hero-label">欢迎回来</text>
+      <text class="hero-title">Hi，{{welcomeName || '负责人'}}</text>
+      <text class="hero-sub">管理活动、审核报名、分配任务</text>
+    </view>
+  </view>
+
+  <view class="stats-grid">
+    <view class="stat-card" bindtap="navigateToActivities">
+      <view class="stat-icon">📋</view>
+      <view class="stat-value">{{stats.totalActivities}}</view>
+      <view class="stat-label">我的活动</view>
+    </view>
+    <view class="stat-card" bindtap="navigateToAudit">
+      <view class="stat-icon">✅</view>
+      <view class="stat-value">{{stats.pendingAudits}}</view>
+      <view class="stat-label">待审核</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-icon">🚀</view>
+      <view class="stat-value">{{stats.activeActivities}}</view>
+      <view class="stat-label">进行中</view>
+    </view>
+  </view>
+
+  <view class="actions-section">
+    <view class="section-title">快捷操作</view>
+    <view class="action-cards">
+      <view class="action-card primary" bindtap="createActivity">
+        <view class="action-icon">➕</view>
+        <view class="action-text">创建活动</view>
+      </view>
+      <view class="action-card" bindtap="navigateToActivities">
+        <view class="action-icon">📋</view>
+        <view class="action-text">我的活动</view>
+      </view>
+      <view class="action-card" bindtap="navigateToAudit">
+        <view class="action-icon">✅</view>
+        <view class="action-text">报名审核</view>
+      </view>
+    </view>
+  </view>
+  <leader-tabbar current="home" />
+</view>
+

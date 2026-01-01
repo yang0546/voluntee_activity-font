@@ -65,7 +65,7 @@ Page({
     if (role === 0) {
       url = '/pages/volunteer/activity-list/activity-list'
     } else if (role === 1) {
-      url = '/pages/leader/activity-list/activity-list'
+      url = '/pages/leader/home/home'
     } else if (role === 2) {
       url = '/pages/admin/home/home'
     }

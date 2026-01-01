@@ -1,0 +1,76 @@
+<view class="page">
+  <view class="top-bg"></view>
+
+  <view class="nav-bar">
+    <view class="nav-left">
+      <text class="nav-title">我管理的活动</text>
+    </view>
+    <button class="create-btn" bindtap="createActivity">+ 创建</button>
+  </view>
+
+  <view class="card filter-card">
+    <view class="card-header">
+      <text class="card-title">筛选条件</text>
+    </view>
+    <view class="filter-grid">
+      <view class="field">
+        <text class="field-label">活动标题</text>
+        <input class="input" placeholder="输入活动标题关键字" value="{{searchParams.title}}" bindinput="onSearchInput" />
+      </view>
+      <view class="field">
+        <text class="field-label">状态</text>
+        <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+          <view class="picker">
+            <text>{{statusOptions[statusIndex].label}}</text>
+            <text class="chevron">⌄</text>
+          </view>
+        </picker>
+      </view>
+      <view class="filter-actions">
+        <button class="primary-btn half" bindtap="onSearch">开始筛选</button>
+        <button class="ghost-btn half" bindtap="onResetFilters">重置筛选</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="list">
+    <view class="activity-card" wx:for="{{activityList}}" wx:key="id" data-id="{{item.id}}" bindtap="viewActivity">
+      <view class="card-row">
+        <view class="title-wrap">
+          <text class="title">{{item.title || '未命名活动'}}</text>
+          <text class="desc">{{item.description || '暂无简介'}}</text>
+        </view>
+        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+      </view>
+
+      <view class="meta-grid">
+        <view class="meta">
+          <text class="meta-label">开始时间</text>
+          <text class="meta-value time-value">{{item.startTimeDisplay || '未设置'}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">地点</text>
+          <text class="meta-value">{{item.location || '未设置'}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">报名截止</text>
+          <text class="meta-value time-value">{{item.deadlineDisplay || '未设置'}}</text>
+        </view>
+        <view class="meta">
+          <text class="meta-label">人数</text>
+          <text class="meta-value">{{item.currentPeople || 0}} / {{item.requiredPeople || 0}}</text>
+        </view>
+      </view>
+
+      <view class="foot">
+        <text class="card-chevron">›</text>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
+  </view>
+  <leader-tabbar current="activities" />
+</view>
+

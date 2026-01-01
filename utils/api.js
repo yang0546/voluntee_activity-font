@@ -27,6 +27,8 @@ const leader = {
   createActivity: (data) => request({ url: '/leader/activity/create', method: 'POST', data }),
   // 获取所有活动信息
   getActivityList: (params) => request({ url: '/leader/activity/list', method: 'GET', data: params }),
+  // 根据ID获取活动信息
+  getActivityById: (id) => request({ url: `/leader/activity/${id}`, method: 'GET' }),
   // 获取自己负责的活动
   getSelfActivities: (params) => request({ url: '/leader/activity/self', method: 'GET', data: params }),
   // 更新活动
@@ -65,4 +67,3 @@ module.exports = {
   leader,
   volunteer
 }
-

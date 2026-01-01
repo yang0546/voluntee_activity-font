@@ -221,7 +221,7 @@ Page({
   viewActivity(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/leader/activity-detail/activity-detail?id=${id}`
+      url: `/pages/leader/activity-edit/activity-edit?id=${id}`
     })
   },
 

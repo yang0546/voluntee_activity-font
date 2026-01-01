@@ -1,2 +1,48 @@
-<!--pages/leader/activity-detail/activity-detail.wxml-->
-<text>pages/leader/activity-detail/activity-detail.wxml</text>
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{detail}}">
+    <view class="activity-card">
+      <view class="header">
+        <view class="title">{{detail.title || '未命名活动'}}</view>
+        <view class="status-badge {{detail.statusClass}}">{{detail.statusText}}</view>
+      </view>
+
+      <view class="section">
+        <text class="label">活动说明</text>
+        <text class="content">{{detail.description || '未填写'}}</text>
+      </view>
+
+      <view class="section">
+        <text class="label">地点</text>
+        <text class="content">{{detail.location || '未填写'}}</text>
+      </view>
+
+      <view class="section">
+        <text class="label">开始时间</text>
+        <text class="content">{{detail.startTimeDisplay || '未设置'}}</text>
+      </view>
+
+      <view class="section">
+        <text class="label">结束时间</text>
+        <text class="content">{{detail.endTimeDisplay || '未设置'}}</text>
+      </view>
+
+      <view class="section">
+        <text class="label">报名截止</text>
+        <text class="content">{{detail.signupDeadlineDisplay || '未设置'}}</text>
+      </view>
+
+      <view class="section">
+        <text class="label">人数</text>
+        <text class="content">{{detail.requiredPeople || 0}} 人</text>
+      </view>
+    </view>
+
+    <view class="actions">
+      <button class="btn btn-primary" bindtap="goEdit">编辑活动</button>
+    </view>
+  </view>
+
+  <view wx:else class="loading">未找到活动信息</view>
+</view>

@@ -89,6 +89,7 @@ button::after {
 .picker-view {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .actions {
