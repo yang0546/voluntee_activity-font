@@ -4,7 +4,8 @@ Page({
   data: {
     activityId: null,
     loading: true,
-    detail: null
+    detail: null,
+    taskList: []
   },
 
   onLoad(options) {
@@ -28,10 +29,14 @@ Page({
 
   loadDetail(id, fromPullDown = false) {
     this.setData({ loading: true })
-    leader.getActivityById(id).then(res => {
-      const data = (res && res.data) || res || {}
+    Promise.all([
+      leader.getActivityById(id),
+      leader.getTaskList(id)
+    ]).then(([detailRes, taskRes]) => {
+      const data = (detailRes && detailRes.data) || detailRes || {}
       const parsed = this.parseActivity(data)
-      this.setData({ detail: parsed, loading: false })
+      const tasks = this.parseTasks((taskRes && taskRes.data) || taskRes || [])
+      this.setData({ detail: parsed, taskList: tasks, loading: false })
     }).catch(() => {
       this.setData({ loading: false })
       wx.showToast({ title: '获取活动详情失败', icon: 'none' })
@@ -56,6 +61,21 @@ Page({
       statusText: statusInfo.text,
       statusClass: statusInfo.cls
     }
+  },
+
+  parseTasks(list) {
+    if (!Array.isArray(list)) return []
+    return list.map(item => ({
+      ...item,
+      startTimeDisplay: this.formatDateTime(item.startTime),
+      endTimeDisplay: this.formatDateTime(item.endTime),
+      statusText: this.getTaskStatusText(item.status)
+    }))
+  },
+
+  getTaskStatusText(status) {
+    const map = { 0: '未开始', 1: '进行中', 2: '已完成' }
+    return map[status] || '未开始'
   },
 
   formatDateTime(time) {
@@ -85,6 +105,13 @@ Page({
     if (!this.data.activityId) return
     wx.navigateTo({
       url: `/pages/leader/activity-edit/activity-edit?id=${this.data.activityId}`
+    })
+  },
+
+  goTaskCreate() {
+    if (!this.data.activityId) return
+    wx.navigateTo({
+      url: `/pages/leader/task-list/task-list?activityId=${this.data.activityId}`
     })
   }
 })

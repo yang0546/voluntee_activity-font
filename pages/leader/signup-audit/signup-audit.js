@@ -27,8 +27,8 @@ Page({
   },
 
   onShow() {
-    this.setData({
-      page: 1,
+    this.setData({ 
+      page: 1, 
       hasMore: true,
       loading: false
     })
@@ -95,7 +95,8 @@ Page({
   },
 
   auditSignup(e) {
-    const { id, status } = e.currentTarget.dataset
+    const id = e.currentTarget.dataset.id
+    const status = Number(e.currentTarget.dataset.status)
     if (status === 1) {
       wx.showModal({
         title: '确认通过',

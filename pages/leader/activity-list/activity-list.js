@@ -221,13 +221,29 @@ Page({
   viewActivity(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/leader/activity-edit/activity-edit?id=${id}`
+      url: `/pages/leader/activity-detail/activity-detail?id=${id}`
     })
   },
 
   createActivity() {
     wx.navigateTo({
       url: '/pages/leader/activity-create/activity-create'
+    })
+  },
+
+  editActivity(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({
+      url: `/pages/leader/activity-edit/activity-edit?id=${id}`
+    })
+  },
+
+  createTask(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({
+      url: `/pages/leader/task-list/task-list?activityId=${id}`
     })
   },
 

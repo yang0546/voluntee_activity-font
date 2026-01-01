@@ -71,9 +71,12 @@
   line-height: 1.6;
 }
 
-.actions {
-  padding: 20rpx 0;
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
 }
+
 
 .btn {
   width: 100%;
@@ -82,7 +85,7 @@
   border-radius: 44rpx;
   font-size: 32rpx;
   border: none;
-  margin-bottom: 20rpx;
+  margin-bottom: 0;
 }
 
 .btn-primary {
@@ -91,7 +94,7 @@
 }
 
 .btn-secondary {
-  background: #ffc107;
+  background: #6366f1;
   color: #fff;
 }
 
@@ -115,4 +118,73 @@
   padding: 100rpx;
   font-size: 28rpx;
   color: #999;
+}
+
+.task-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.task-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.task-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.task-user {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+}
+
+.task-status {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.task-content {
+  font-size: 28rpx;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 8rpx;
+}
+
+.task-time {
+  font-size: 24rpx;
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 24rpx 0;
+  font-size: 26rpx;
 }

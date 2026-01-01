@@ -1,2 +1,54 @@
-<!--pages/leader/task-list/task-list.wxml-->
-<text>pages/leader/task-list/task-list.wxml</text>
+<view class="page">
+  <view class="form-card">
+    <view class="form-head">
+      <text class="title">创建任务</text>
+      <text class="sub">为报名成功的志愿者分配任务</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">志愿者</text>
+      <picker mode="selector" range="{{userOptions}}" range-key="name" value="{{userIndex}}" bindchange="onUserChange">
+        <view class="picker-view">{{userOptions.length ? userOptions[userIndex].name : '请选择志愿者'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">任务内容</text>
+      <textarea class="textarea" placeholder="请输入任务内容" value="{{form.content}}" bindinput="onInput" data-field="content" />
+    </view>
+
+    <view class="form-item form-row">
+      <view class="half">
+        <text class="label">开始日期</text>
+        <picker mode="date" value="{{form.startDate}}" bindchange="onDateChange" data-field="startDate">
+          <view class="picker-view">{{form.startDate || '请选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="half">
+        <text class="label">开始时间</text>
+        <picker mode="time" value="{{form.startTime}}" bindchange="onTimeChange" data-field="startTime">
+          <view class="picker-view">{{form.startTime || '请选择时间'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-item form-row">
+      <view class="half">
+        <text class="label">结束日期</text>
+        <picker mode="date" value="{{form.endDate}}" bindchange="onDateChange" data-field="endDate">
+          <view class="picker-view">{{form.endDate || '请选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="half">
+        <text class="label">结束时间</text>
+        <picker mode="time" value="{{form.endTime}}" bindchange="onTimeChange" data-field="endTime">
+          <view class="picker-view">{{form.endTime || '请选择时间'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="actions">
+      <button class="primary-btn" bindtap="submit" loading="{{submitting}}">提交任务</button>
+    </view>
+  </view>
+</view>

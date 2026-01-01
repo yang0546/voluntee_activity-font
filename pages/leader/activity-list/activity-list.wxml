@@ -90,6 +90,11 @@
         </view>
       </view>
 
+      <view class="action-buttons">
+        <button class="action-btn edit" catchtap="editActivity" data-id="{{item.id}}">编辑活动</button>
+        <button class="action-btn task" catchtap="createTask" data-id="{{item.id}}">创建任务</button>
+      </view>
+
       <view class="foot">
         <text class="leader">负责人：{{item.leaderName || '未设置'}}</text>
         <text class="card-chevron">›</text>

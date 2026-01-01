@@ -14,6 +14,7 @@ function request(options) {
         ...(options.header || {})
       },
       success(res) {
+        console.log('[request]', options.method || 'GET', options.url, 'data:', options.data, 'resp:', res.data)
         const data = res.data || {}
         if (data.code === 1) {
           resolve(data.data)

@@ -363,6 +363,31 @@ button::after {
   text-overflow: ellipsis;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 14rpx;
+  border: none;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.action-btn.edit {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.action-btn.task {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
 .foot {
   display: flex;
   justify-content: space-between;
