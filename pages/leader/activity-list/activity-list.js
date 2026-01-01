@@ -2,12 +2,28 @@ const { leader } = require('../../../utils/api')
 
 Page({
   data: {
-    activityList: [],
-    page: 1,
-    pageSize: 10,
-    total: 0,
-    loading: false,
-    hasMore: true,
+    welcomeName: '',
+    tabs: [
+      { key: 'all', label: '全部活动' },
+      { key: 'self', label: '我的活动' }
+    ],
+    activeTab: 'all',
+    all: {
+      list: [],
+      page: 1,
+      pageSize: 10,
+      total: 0,
+      loading: false,
+      hasMore: true
+    },
+    self: {
+      list: [],
+      page: 1,
+      pageSize: 10,
+      total: 0,
+      loading: false,
+      hasMore: true
+    },
     statusIndex: 0,
     statusOptions: [
       { label: '全部状态', value: '' },
@@ -17,114 +33,217 @@ Page({
       { label: '已取消', value: 3 }
     ],
     searchParams: {
-      title: ''
+      title: '',
+      status: ''
     },
-    showSelfOnly: false
+    refreshing: false
   },
+
   onLoad() {
-    this.loadActivityList(true)
+    this.setWelcomeName()
+    this.loadAllActivities(true)
   },
+
+  onShow() {
+    // 每次显示页面时刷新当前标签页数据
+    this.refreshActiveTab()
+  },
+
   onPullDownRefresh() {
-    this.setData({ page: 1, hasMore: true })
-    this.loadActivityList(true)
+    this.setData({ refreshing: true })
+    this.refreshActiveTab()
   },
+
   onReachBottom() {
-    if (this.data.hasMore && !this.data.loading) {
-      this.loadActivityList(false)
+    this.loadActiveTabMore()
+  },
+
+  setWelcomeName() {
+    const profile = wx.getStorageSync('userProfile') || {}
+    const name = profile.userName || profile.name
+    this.setData({ welcomeName: name || '负责人' })
+  },
+
+  onTabChange(e) {
+    const key = e.currentTarget.dataset.key
+    if (key === this.data.activeTab) return
+    this.setData({ activeTab: key })
+    const tabState = this.data[key]
+    if (!tabState.list.length) {
+      this.refreshActiveTab()
     }
   },
-  loadActivityList(refresh = false) {
-    if (this.data.loading) return
-    this.setData({ loading: true })
+
+  refreshActiveTab() {
+    const { activeTab } = this.data
+    if (activeTab === 'all') {
+      this.setData({ all: { ...this.data.all, page: 1, hasMore: true } })
+      this.loadAllActivities(true)
+    } else if (activeTab === 'self') {
+      this.setData({ self: { ...this.data.self, page: 1, hasMore: true } })
+      this.loadSelfActivities(true)
+    }
+  },
+
+  loadActiveTabMore() {
+    const { activeTab } = this.data
+    if (activeTab === 'all') {
+      if (this.data.all.hasMore && !this.data.all.loading) {
+        this.loadAllActivities(false)
+      }
+    } else if (activeTab === 'self') {
+      if (this.data.self.hasMore && !this.data.self.loading) {
+        this.loadSelfActivities(false)
+      }
+    }
+  },
+
+  loadAllActivities(refresh = false) {
+    const tabState = this.data.all
+    if (tabState.loading && !refresh) return
+    const nextPage = refresh ? 1 : tabState.page
+    this.setData({ 
+      'all.loading': true, 
+      refreshing: refresh 
+    })
     const params = {
-      page: refresh ? 1 : this.data.page,
-      pageSize: this.data.pageSize,
+      page: nextPage,
+      pageSize: tabState.pageSize,
       ...this.data.searchParams
     }
-    const api = this.data.showSelfOnly ? leader.getSelfActivities : leader.getActivityList
-    api(params).then(res => {
-      const newList = refresh ? res.records : [...this.data.activityList, ...res.records]
+    leader.getActivityList(params).then(res => {
+      const records = (res.records || []).map(item => ({
+        ...item,
+        startTimeDisplay: this.formatTime(item.startTime),
+        endTimeDisplay: this.formatTime(item.endTime),
+        deadlineDisplay: this.formatTime(item.signupDeadline)
+      }))
+      const newList = refresh ? records : [...tabState.list, ...records]
+      const total = res.total || newList.length
       this.setData({
-        activityList: newList,
-        total: res.total,
-        page: refresh ? 2 : this.data.page + 1,
-        hasMore: newList.length < res.total,
-        loading: false
+        'all.list': newList,
+        'all.total': total,
+        'all.page': refresh ? 2 : tabState.page + 1,
+        'all.hasMore': newList.length < total,
+        'all.loading': false,
+        refreshing: false
       })
-      if (refresh) {
-        wx.stopPullDownRefresh()
-      }
-    }).catch(err => {
-      this.setData({ loading: false })
-      if (refresh) {
-        wx.stopPullDownRefresh()
-      }
+      if (refresh) wx.stopPullDownRefresh()
+    }).catch(() => {
+      this.setData({ 
+        'all.loading': false, 
+        refreshing: false 
+      })
+      if (refresh) wx.stopPullDownRefresh()
     })
   },
-  toggleSelfOnly() {
-    this.setData({
-      showSelfOnly: !this.data.showSelfOnly,
-      page: 1,
-      hasMore: true
+
+  loadSelfActivities(refresh = false) {
+    const tabState = this.data.self
+    if (tabState.loading && !refresh) return
+    const nextPage = refresh ? 1 : tabState.page
+    this.setData({ 
+      'self.loading': true, 
+      refreshing: refresh 
     })
-    this.loadActivityList(true)
+    const params = {
+      page: nextPage,
+      pageSize: tabState.pageSize,
+      ...this.data.searchParams
+    }
+    leader.getSelfActivities(params).then(res => {
+      const records = (res.records || []).map(item => ({
+        ...item,
+        startTimeDisplay: this.formatTime(item.startTime),
+        endTimeDisplay: this.formatTime(item.endTime),
+        deadlineDisplay: this.formatTime(item.signupDeadline)
+      }))
+      const newList = refresh ? records : [...tabState.list, ...records]
+      const total = res.total || newList.length
+      this.setData({
+        'self.list': newList,
+        'self.total': total,
+        'self.page': refresh ? 2 : tabState.page + 1,
+        'self.hasMore': newList.length < total,
+        'self.loading': false,
+        refreshing: false
+      })
+      if (refresh) wx.stopPullDownRefresh()
+    }).catch(() => {
+      this.setData({ 
+        'self.loading': false, 
+        refreshing: false 
+      })
+      if (refresh) wx.stopPullDownRefresh()
+    })
   },
+
   onSearchInput(e) {
+    this.setData({ 'searchParams.title': e.detail.value })
+  },
+
+  onStatusChange(e) {
+    const index = e.detail.value
+    const status = this.data.statusOptions[index].value
     this.setData({
-      'searchParams.title': e.detail.value
+      statusIndex: index,
+      'searchParams.status': status,
+      'all.page': 1,
+      'all.hasMore': true,
+      'self.page': 1,
+      'self.hasMore': true
     })
+    this.refreshActiveTab()
   },
+
   onSearch() {
-    this.setData({ page: 1, hasMore: true })
-    this.loadActivityList(true)
-  },
-  createActivity() {
-    wx.navigateTo({
-      url: '/pages/leader/activity-create/activity-create'
+    this.setData({
+      'all.page': 1,
+      'all.hasMore': true,
+      'self.page': 1,
+      'self.hasMore': true
     })
+    this.refreshActiveTab()
   },
-  viewActivityDetail(e) {
+
+  onResetFilters() {
+    this.setData({
+      searchParams: { title: '', status: '' },
+      statusIndex: 0,
+      'all.page': 1,
+      'all.hasMore': true,
+      'self.page': 1,
+      'self.hasMore': true
+    })
+    this.refreshActiveTab()
+  },
+
+  viewActivity(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
       url: `/pages/leader/activity-detail/activity-detail?id=${id}`
     })
   },
-  viewSignupList(e) {
-    const id = e.currentTarget.dataset.id
-    const storedProfile = wx.getStorageSync('userProfile') || {}
-    const leaderId = storedProfile.id || wx.getStorageSync('userId')
-    const ownerId = e.currentTarget.dataset.leaderid || e.currentTarget.dataset.ownerid
-    const canCheck = ownerId && leaderId
-    if (canCheck && Number(ownerId) !== Number(leaderId)) {
-      wx.showToast({
-        title: '您不是该活动的负责人，无权限查看该活动报名记录',
-        icon: 'none',
-        duration: 2000
-      })
-      return
-    }
+
+  createActivity() {
     wx.navigateTo({
-      url: `/pages/leader/signup-list/signup-list?activityId=${id}`
+      url: '/pages/leader/activity-create/activity-create'
     })
   },
+
   formatTime(time) {
     if (!time || time === null || time === undefined || time === '') return '未设置'
     try {
-      // 处理字符串时间
       let timeStr = String(time).trim()
-      if (!timeStr) return '未设置'
-      
-      // 如果格式是 "YYYY-MM-DD HH:mm:ss"，直接截取前16位显示
-      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(timeStr)) {
-        return timeStr.substring(0, 16) // 返回 "YYYY-MM-DD HH:mm"
+      if (!timeStr || timeStr === 'null' || timeStr === 'undefined') {
+        return '未设置'
       }
-      
-      // 如果包含T，先替换为空格
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(timeStr)) {
+        return timeStr.substring(0, 16)
+      }
       if (timeStr.includes('T')) {
         timeStr = timeStr.replace('T', ' ')
       }
-      
-      // 尝试解析为Date对象
       const date = new Date(time)
       if (!isNaN(date.getTime()) && date.getTime() > 0) {
         const year = date.getFullYear()
@@ -134,25 +253,23 @@ Page({
         const minute = String(date.getMinutes()).padStart(2, '0')
         return `${year}-${month}-${day} ${hour}:${minute}`
       }
-      
-      // 如果解析失败，尝试简单格式化字符串（截取前16位）
       if (timeStr.length >= 16) {
         return timeStr.substring(0, 16)
       }
       return timeStr || '未设置'
     } catch (e) {
-      // 如果出错，尝试简单处理
       const timeStr = String(time).replace('T', ' ').trim()
       return timeStr.length >= 16 ? timeStr.substring(0, 16) : (timeStr || '未设置')
     }
   },
+
   getStatusText(status) {
     const map = { 0: '未开始', 1: '进行中', 2: '已结束', 3: '已取消' }
     return map[status] || '未知'
   },
+
   getStatusClass(status) {
     const map = { 0: 'status-pending', 1: 'status-active', 2: 'status-ended', 3: 'status-cancelled' }
     return map[status] || ''
   }
 })
-

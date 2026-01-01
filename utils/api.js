@@ -40,7 +40,9 @@ const leader = {
   // 任务分配
   taskAssign: (data) => request({ url: '/leader/activity/taskAssign', method: 'POST', data }),
   // 获取任务列表
-  getTaskList: (activityId) => request({ url: `/leader/activity/taskList?activityId=${activityId}`, method: 'GET' })
+  getTaskList: (activityId) => request({ url: `/leader/activity/taskList?activityId=${activityId}`, method: 'GET' }),
+  // 获取活动报名成功的用户列表
+  getUserList: (activityId) => request({ url: `/leader/activity/userList?activityId=${activityId}`, method: 'GET' })
 }
 
 // 志愿者接口

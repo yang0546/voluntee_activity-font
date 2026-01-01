@@ -86,12 +86,12 @@
 }
 
 .btn-primary {
-  background: #2196f3;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: #fff;
 }
 
 .btn-secondary {
-  background: #4caf50;
+  background: #ffc107;
   color: #fff;
 }
 
@@ -105,10 +105,14 @@
   color: #fff;
 }
 
+.btn-disabled {
+  background: #ccc;
+  color: #999;
+}
+
 .loading {
   text-align: center;
   padding: 100rpx;
   font-size: 28rpx;
   color: #999;
 }
-

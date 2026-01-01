@@ -1,6 +1,5 @@
 {
   "navigationBarTitleText": "报名审核",
-  "enablePullDownRefresh": true,
-  "onReachBottomDistance": 50
+  "enablePullDownRefresh": true
 }
 

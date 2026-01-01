@@ -1,89 +1,66 @@
-const { leader } = require('../../../utils/api')
-
+// pages/leader/activity-detail/activity-detail.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    activityId: null,
-    activity: null,
-    loading: true
+
   },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad(options) {
-    if (options.id) {
-      this.setData({ activityId: options.id })
-      this.loadActivityDetail()
-    }
+
   },
-  loadActivityDetail() {
-    wx.showLoading({ title: '加载中...' })
-    leader.getSelfActivities({ page: 1, pageSize: 1000 }).then(res => {
-      const activity = res.records.find(item => item.id == this.data.activityId)
-      if (activity) {
-        this.setData({
-          activity,
-          loading: false
-        })
-      } else {
-        wx.showToast({ title: '活动不存在', icon: 'none' })
-        setTimeout(() => wx.navigateBack(), 1500)
-      }
-      wx.hideLoading()
-    }).catch(err => {
-      wx.hideLoading()
-      this.setData({ loading: false })
-    })
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
-  editActivity() {
-    wx.navigateTo({
-      url: `/pages/leader/activity-edit/activity-edit?id=${this.data.activityId}`
-    })
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
-  deleteActivity() {
-    wx.showModal({
-      title: '确认删除',
-      content: '确定要删除此活动吗？删除后不可恢复！',
-      success: (res) => {
-        if (res.confirm) {
-          wx.showLoading({ title: '删除中...' })
-          leader.deleteActivity(this.data.activityId).then(() => {
-            wx.hideLoading()
-            wx.showToast({ title: '删除成功', icon: 'success' })
-            setTimeout(() => wx.navigateBack(), 1500)
-          }).catch(err => {
-            wx.hideLoading()
-          })
-        }
-      }
-    })
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
   },
-  viewSignups() {
-    wx.navigateTo({
-      url: `/pages/leader/signup-list/signup-list?activityId=${this.data.activityId}`
-    })
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
-  viewTasks() {
-    wx.navigateTo({
-      url: `/pages/leader/task-list/task-list?activityId=${this.data.activityId}`
-    })
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
   },
-  formatTime(time) {
-    if (!time) return ''
-    try {
-      const date = new Date(time)
-      if (!isNaN(date.getTime())) {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        return `${year}-${month}-${day} ${hour}:${minute}`
-      }
-      return String(time).replace('T', ' ').substring(0, 16)
-    } catch (e) {
-      return String(time).replace('T', ' ').substring(0, 16)
-    }
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
   },
-  getStatusText(status) {
-    const map = { 0: '未开始', 1: '进行中', 2: '已结束', 3: '已取消' }
-    return map[status] || '未知'
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
   }
 })
-

@@ -1,98 +1,66 @@
-const { leader } = require('../../../utils/api')
-const app = getApp()
-
+// pages/leader/activity-create/activity-create.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    form: {
-      title: '',
-      description: '',
-      location: '',
-      startTime: '',
-      endTime: '',
-      signupDeadline: '',
-      requiredPeople: ''
-    },
-    loading: false
+
   },
-  onLoad() {
-    // 设置默认时间
-    const now = new Date()
-    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000)
-    this.setData({
-      'form.startTime': this.formatDate(tomorrow),
-      'form.endTime': this.formatDate(tomorrow),
-      'form.signupDeadline': this.formatDate(now)
-    })
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
+
   },
-  onInputChange(e) {
-    const { field } = e.currentTarget.dataset
-    this.setData({
-      [`form.${field}`]: e.detail.value
-    })
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
-  onDateChange(e) {
-    const { field } = e.currentTarget.dataset
-    const date = e.detail.value
-    const currentTime = this.data.form[field] || ''
-    const time = currentTime.includes('T') ? currentTime.split('T')[1] : ''
-    this.setData({
-      [`form.${field}`]: time ? `${date}T${time}` : `${date}T00:00`
-    })
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
-  onTimeChange(e) {
-    const { field } = e.currentTarget.dataset
-    const time = e.detail.value
-    const currentDate = this.data.form[field] || ''
-    const date = currentDate.includes('T') ? currentDate.split('T')[0] : new Date().toISOString().split('T')[0]
-    this.setData({
-      [`form.${field}`]: `${date}T${time}`
-    })
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
   },
-  handleSubmit() {
-    const { form } = this.data
-    // 验证必填项
-    if (!form.title || !form.description || !form.location || !form.startTime || !form.endTime || !form.signupDeadline || !form.requiredPeople) {
-      wx.showToast({ title: '请填写完整信息', icon: 'none' })
-      return
-    }
-    if (parseInt(form.requiredPeople) <= 0) {
-      wx.showToast({ title: '人数必须大于0', icon: 'none' })
-      return
-    }
-    const profile = app.globalData.profile || wx.getStorageSync('userProfile')
-    if (!profile || !profile.id) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      return
-    }
-    wx.showLoading({ title: '创建中...' })
-    this.setData({ loading: true })
-    const submitData = {
-      ...form,
-      requiredPeople: parseInt(form.requiredPeople),
-      leaderId: profile.id,
-      startTime: form.startTime.replace('T', ' '),
-      endTime: form.endTime.replace('T', ' '),
-      signupDeadline: form.signupDeadline.replace('T', ' ')
-    }
-    leader.createActivity(submitData).then(() => {
-      wx.hideLoading()
-      wx.showToast({ title: '创建成功', icon: 'success' })
-      setTimeout(() => {
-        wx.navigateBack()
-      }, 1500)
-    }).catch(err => {
-      wx.hideLoading()
-      this.setData({ loading: false })
-    })
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
-  formatDate(date) {
-    if (typeof date === 'string') return date
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hour = String(date.getHours()).padStart(2, '0')
-    const minute = String(date.getMinutes()).padStart(2, '0')
-    return `${year}-${month}-${day}T${hour}:${minute}`
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
   }
 })
-

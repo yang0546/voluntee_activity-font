@@ -1,116 +1,66 @@
-const { leader } = require('../../../utils/api')
-
+// pages/leader/activity-edit/activity-edit.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    activityId: null,
-    statusIndex: 0,
-    statusOptions: [
-      { label: '未开始', value: 0 },
-      { label: '进行中', value: 1 },
-      { label: '已结束', value: 2 },
-      { label: '已取消', value: 3 }
-    ],
-    form: {
-      title: '',
-      description: '',
-      location: '',
-      startTime: '',
-      endTime: '',
-      signupDeadline: '',
-      requiredPeople: '',
-      status: 0
-    },
-    loading: false
+
   },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad(options) {
-    if (options.id) {
-      this.setData({ activityId: options.id })
-      this.loadActivity()
-    }
+
   },
-  loadActivity() {
-    wx.showLoading({ title: '加载中...' })
-    leader.getSelfActivities({ page: 1, pageSize: 1000 }).then(res => {
-      const activity = res.records.find(item => item.id == this.data.activityId)
-      if (activity) {
-        const statusIndex = this.data.statusOptions.findIndex(opt => opt.value === activity.status)
-        this.setData({
-          statusIndex: statusIndex >= 0 ? statusIndex : 0,
-          form: {
-            title: activity.title,
-            description: activity.description,
-            location: activity.location,
-            startTime: activity.startTime.replace(' ', 'T'),
-            endTime: activity.endTime.replace(' ', 'T'),
-            signupDeadline: activity.signupDeadline.replace(' ', 'T'),
-            requiredPeople: activity.requiredPeople.toString(),
-            status: activity.status
-          }
-        })
-      }
-      wx.hideLoading()
-    }).catch(err => {
-      wx.hideLoading()
-    })
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
-  onInputChange(e) {
-    const { field } = e.currentTarget.dataset
-    this.setData({
-      [`form.${field}`]: e.detail.value
-    })
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
-  onDateChange(e) {
-    const { field } = e.currentTarget.dataset
-    const date = e.detail.value
-    const currentTime = this.data.form[field] || ''
-    const time = currentTime.includes('T') ? currentTime.split('T')[1] : ''
-    this.setData({
-      [`form.${field}`]: time ? `${date}T${time}` : `${date}T00:00`
-    })
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
   },
-  onTimeChange(e) {
-    const { field } = e.currentTarget.dataset
-    const time = e.detail.value
-    const currentDate = this.data.form[field] || ''
-    const date = currentDate.includes('T') ? currentDate.split('T')[0] : new Date().toISOString().split('T')[0]
-    this.setData({
-      [`form.${field}`]: `${date}T${time}`
-    })
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
-  onStatusChange(e) {
-    const index = e.detail.value
-    const status = this.data.statusOptions[index].value
-    this.setData({
-      statusIndex: index,
-      'form.status': status
-    })
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
   },
-  handleSubmit() {
-    const { form } = this.data
-    if (!form.title || !form.description || !form.location) {
-      wx.showToast({ title: '请填写完整信息', icon: 'none' })
-      return
-    }
-    wx.showLoading({ title: '更新中...' })
-    this.setData({ loading: true })
-    const submitData = {
-      id: this.data.activityId,
-      ...form,
-      requiredPeople: parseInt(form.requiredPeople),
-      startTime: form.startTime.replace('T', ' '),
-      endTime: form.endTime.replace('T', ' '),
-      signupDeadline: form.signupDeadline.replace('T', ' ')
-    }
-    leader.updateActivity(submitData).then(() => {
-      wx.hideLoading()
-      wx.showToast({ title: '更新成功', icon: 'success' })
-      setTimeout(() => {
-        wx.navigateBack()
-      }, 1500)
-    }).catch(err => {
-      wx.hideLoading()
-      this.setData({ loading: false })
-    })
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
   }
 })
-
