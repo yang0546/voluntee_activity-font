@@ -51,6 +51,7 @@
   border-radius: 16rpx;
   padding: 20rpx 12rpx;
   text-align: center;
+  position: relative;
 }
 
 .action-icon {
@@ -61,6 +62,21 @@
   margin-top: 6rpx;
   color: #0f172a;
   font-weight: 600;
+}
+
+.corner-dot {
+  position: absolute;
+  top: 6rpx;
+  right: 10rpx;
+  min-width: 36rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 999rpx;
+  background: #ef4444;
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 1.2;
+  text-align: center;
+  box-shadow: 0 4rpx 10rpx rgba(239, 68, 68, 0.35);
 }
 
 .section .link {

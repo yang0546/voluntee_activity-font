@@ -52,7 +52,6 @@
               <view class="task-title">{{item.content || '任务'}}</view>
               <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
             </view>
-            <view class="task-meta">时间：{{item.timeRange}}</view>
             <view class="task-actions">
               <button
                 size="mini"

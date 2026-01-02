@@ -9,14 +9,26 @@
 
 .title-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12rpx;
 }
 
 .title {
   font-size: 32rpx;
   font-weight: 700;
   color: #0f172a;
+  flex: 1;
+}
+
+.badge {
+  min-width: 40rpx;
+  padding: 4rpx 10rpx;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  text-align: center;
+  align-self: center;
 }
 
 .meta {

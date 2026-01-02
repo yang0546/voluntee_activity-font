@@ -36,6 +36,9 @@
           <view class="action-text">我的报名</view>
         </view>
         <view class="action-item" bindtap="goMyActivities">
+          <view wx:if="{{pendingTaskCount > 0}}" class="corner-dot">
+            {{pendingTaskCount > 99 ? '99+' : pendingTaskCount}}
+          </view>
           <view class="action-icon">✅</view>
           <view class="action-text">我的活动</view>
         </view>

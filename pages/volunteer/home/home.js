@@ -22,7 +22,8 @@ Page({
       approved: 0
     },
     mySignups: [],
-    highlightActivities: []
+    highlightActivities: [],
+    pendingTaskCount: 0
   },
   onShow() {
     this.initPage()
@@ -34,7 +35,11 @@ Page({
     const profile = wx.getStorageSync('userProfile') || {}
     this.setData({ profile })
     wx.showNavigationBarLoading()
-    await Promise.all([this.fetchSignupRecords(), this.fetchHighlightActivities()])
+    await Promise.all([
+      this.fetchSignupRecords(),
+      this.fetchHighlightActivities(),
+      this.fetchPendingTasks()
+    ])
     wx.hideNavigationBarLoading()
     if (isRefresh) {
       wx.stopPullDownRefresh()
@@ -91,6 +96,30 @@ Page({
           }
         ]
       })
+    }
+  },
+  async fetchPendingTasks() {
+    try {
+      const res = await volunteer.getSignupRecords({ page: 1, pageSize: 100, status: 1 })
+      const records = (res && res.records) || []
+      const activityIds = [...new Set(records.map(item => item.activityId).filter(Boolean))]
+      if (!activityIds.length) {
+        this.setData({ pendingTaskCount: 0 })
+        return
+      }
+      let pending = 0
+      for (const id of activityIds) {
+        try {
+          const tasks = await volunteer.getTaskList(id)
+          pending += (tasks || []).filter(t => t.status === 0 || t.status === 1).length
+        } catch (err) {
+          console.warn('load tasks for activity failed', id, err)
+        }
+      }
+      this.setData({ pendingTaskCount: pending })
+    } catch (err) {
+      console.error('fetchPendingTasks failed', err)
+      this.setData({ pendingTaskCount: 0 })
     }
   },
   async fetchHighlightActivities() {

@@ -102,23 +102,33 @@ Page({
     if (!id || status === undefined) return
     if (status === 2 || this.data.updatingTaskId) return
     const nextStatus = status === 0 ? 1 : 2
-    this.setData({ updatingTaskId: id })
-    wx.showLoading({ title: '更新中...', mask: true })
-    try {
-      await volunteer.updateTaskStatus({ taskId: id, status: nextStatus })
-      wx.showToast({ title: '已更新', icon: 'success' })
-      const tasks = this.data.tasks.map(t => {
-        if (String(t.taskId) !== String(id)) return t
-        return mapTask({ ...t, status: nextStatus })
-      })
-      this.setData({ tasks })
-    } catch (err) {
-      console.error('update task failed', err)
-      wx.showToast({ title: err.msg || '更新失败', icon: 'none' })
-    } finally {
-      wx.hideLoading()
-      this.setData({ updatingTaskId: '' })
-    }
+    const nextLabel = nextStatus === 1 ? '进行中' : '已完成'
+    wx.showModal({
+      title: '确认更新任务',
+      content: `请根据实际完成情况推进任务，随意点击后果自负。是否将任务状态更新为“${nextLabel}”？`,
+      confirmText: '确认',
+      cancelText: '取消',
+      success: async (res) => {
+        if (!res.confirm) return
+        this.setData({ updatingTaskId: id })
+        wx.showLoading({ title: '更新中...', mask: true })
+        try {
+          await volunteer.updateTaskStatus({ taskId: id, status: nextStatus })
+          wx.showToast({ title: '已更新', icon: 'success' })
+          const tasks = this.data.tasks.map(t => {
+            if (String(t.taskId) !== String(id)) return t
+            return mapTask({ ...t, status: nextStatus })
+          })
+          this.setData({ tasks })
+        } catch (err) {
+          console.error('update task failed', err)
+          wx.showToast({ title: err.msg || '更新失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+          this.setData({ updatingTaskId: '' })
+        }
+      }
+    })
   },
   normalizeActivity(item) {
     const meta = STATUS_META[item.status] || STATUS_META[0]

@@ -1,12 +1,18 @@
 <view class="page records-page">
   <block wx:if="{{records.length}}">
     <view wx:for="{{records}}" wx:key="id" class="record-card card">
-      <view class="record-top">
+      <view class="record-header">
         <view class="title">{{item.activityTitle}}</view>
         <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
       </view>
-      <view class="meta muted">报名时间：{{item.signupTimeText || '—'}}</view>
-      <view class="meta muted">审核时间：{{item.auditTimeText || '—'}}</view>
+      <view class="meta-row">
+        <text class="label">报名时间</text>
+        <text class="value">{{item.signupTimeText || '—'}}</text>
+      </view>
+      <view class="meta-row">
+        <text class="label">审核时间</text>
+        <text class="value">{{item.auditTimeText || '—'}}</text>
+      </view>
       <view wx:if="{{item.statusClass === 'status-rejected' && item.auditReason}}" class="audit-reason">
         拒绝原因：{{item.auditReason}}
       </view>

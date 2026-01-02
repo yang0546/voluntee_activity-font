@@ -14,10 +14,9 @@ Page({
     try {
       const res = await volunteer.getSignupRecords({ page: 1, pageSize: 100, status: 1 })
       const records = (res && res.records) || []
-      const approved = records
-        .filter(item => item.status === 1)
-        .map(mapApprovedRecord)
-      this.setData({ list: approved })
+      const approved = records.filter(item => item.status === 1).map(mapApprovedRecord)
+      const withTasks = await appendPendingTaskCounts(approved)
+      this.setData({ list: withTasks })
     } catch (err) {
       console.error('load my activities failed', err)
       this.setData({ list: [] })
@@ -44,4 +43,21 @@ function mapApprovedRecord(item) {
     signupDeadlineText: format(item.signupDeadline),
     signupTimeText: format(item.signupTime)
   }
+}
+
+async function appendPendingTaskCounts(list) {
+  const results = []
+  for (const item of list) {
+    let pendingTaskCount = 0
+    try {
+      if (item.activityId) {
+        const tasks = await volunteer.getTaskList(item.activityId)
+        pendingTaskCount = (tasks || []).filter(t => t.status === 0 || t.status === 1).length
+      }
+    } catch (err) {
+      console.warn('load tasks for activity failed', item.activityId, err)
+    }
+    results.push({ ...item, pendingTaskCount })
+  }
+  return results
 }
