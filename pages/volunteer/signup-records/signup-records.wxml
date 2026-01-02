@@ -5,8 +5,11 @@
         <view class="title">{{item.activityTitle}}</view>
         <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
       </view>
-      <view class="meta">{{item.createTime || '—'}}</view>
-      <view class="meta muted">报名ID：{{item.id}}</view>
+      <view class="meta muted">报名时间：{{item.signupTimeText || '—'}}</view>
+      <view class="meta muted">审核时间：{{item.auditTimeText || '—'}}</view>
+      <view wx:if="{{item.statusClass === 'status-rejected' && item.auditReason}}" class="audit-reason">
+        拒绝原因：{{item.auditReason}}
+      </view>
     </view>
   </block>
   <view wx:else class="empty">暂无报名记录</view>

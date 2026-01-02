@@ -26,7 +26,10 @@ Page({
           ...item,
           statusText: meta.text,
           statusClass: meta.className,
-          activityTitle: item.activityTitle || item.title || '志愿活动'
+          activityTitle: item.activityTitle || item.title || '志愿活动',
+          auditReason: item.auditReason || '',
+          signupTimeText: formatDateTime(item.signupTime),
+          auditTimeText: formatDateTime(item.auditTime)
         }
       })
       this.setData({ records: mapped })
@@ -40,7 +43,10 @@ Page({
             activityTitle: '校园迎新志愿服务',
             statusText: '待审核',
             statusClass: 'status-pending',
-            createTime: '2024-03-10 10:00'
+            createTime: '2024-03-10 10:00',
+            auditReason: '',
+            signupTimeText: '',
+            auditTimeText: ''
           }
         ]
       })
@@ -56,3 +62,8 @@ Page({
     })
   }
 })
+
+function formatDateTime(value) {
+  if (!value) return ''
+  return value.replace('T', ' ').slice(0, 19)
+}

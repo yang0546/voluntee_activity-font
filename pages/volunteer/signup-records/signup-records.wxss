@@ -24,6 +24,13 @@
   margin-top: 8rpx;
 }
 
+.audit-reason {
+  margin-top: 10rpx;
+  color: #b91c1c;
+  font-size: 26rpx;
+  line-height: 1.4;
+}
+
 .empty {
   text-align: center;
   color: #94a3b8;
