@@ -53,13 +53,6 @@ Page({
     } finally {
       wx.stopPullDownRefresh()
     }
-  },
-  goDetail(event) {
-    const { id } = event.currentTarget.dataset
-    if (!id) return
-    wx.navigateTo({
-      url: `/pages/volunteer/activity-detail/activity-detail?id=${id}`
-    })
   }
 })
 

@@ -47,6 +47,40 @@
   line-height: 1.6;
 }
 
+.task-item {
+  padding: 12rpx 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.task-meta {
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
+.task-actions {
+  margin-top: 10rpx;
+}
+
+.task-btn {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
 .footer-actions {
   position: fixed;
   left: 0;

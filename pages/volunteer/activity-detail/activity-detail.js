@@ -14,7 +14,8 @@ Page({
     signing: false,
     showTasks: false,
     tasksLoading: false,
-    tasks: []
+    tasks: [],
+    updatingTaskId: ''
   },
   onLoad(options) {
     const { data, id, from } = options || {}
@@ -88,6 +89,29 @@ Page({
       this.setData({ tasksLoading: false })
     }
   },
+  async updateTaskStatus(event) {
+    const { id, status } = event.currentTarget.dataset
+    if (!id || status === undefined) return
+    if (status === 2 || this.data.updatingTaskId) return
+    const nextStatus = status === 0 ? 1 : 2
+    this.setData({ updatingTaskId: id })
+    wx.showLoading({ title: '更新中...', mask: true })
+    try {
+      await volunteer.updateTaskStatus({ taskId: id, status: nextStatus })
+      wx.showToast({ title: '已更新', icon: 'success' })
+      const tasks = this.data.tasks.map(t => {
+        if (String(t.taskId) !== String(id)) return t
+        return mapTask({ ...t, status: nextStatus })
+      })
+      this.setData({ tasks })
+    } catch (err) {
+      console.error('update task failed', err)
+      wx.showToast({ title: err.msg || '更新失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+      this.setData({ updatingTaskId: '' })
+    }
+  },
   normalizeActivity(item) {
     const meta = STATUS_META[item.status] || STATUS_META[0]
     const current = Number(item.currentPeople || 0)
@@ -119,6 +143,7 @@ function mapTask(item) {
   const meta = STATUS_MAP[item.status] || STATUS_MAP[0]
   return {
     ...item,
+    taskId: item.taskId || item.id,
     statusText: meta.text,
     statusClass: meta.className,
     timeRange: formatTaskTime(item.startTime, item.endTime)

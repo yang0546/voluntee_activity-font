@@ -1,6 +1,6 @@
 <view class="page records-page">
   <block wx:if="{{records.length}}">
-    <view wx:for="{{records}}" wx:key="id" class="record-card card" data-id="{{item.activityId}}" bindtap="goDetail">
+    <view wx:for="{{records}}" wx:key="id" class="record-card card">
       <view class="record-top">
         <view class="title">{{item.activityTitle}}</view>
         <view class="tag {{item.statusClass}}">{{item.statusText}}</view>

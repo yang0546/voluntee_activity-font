@@ -53,6 +53,19 @@
               <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
             </view>
             <view class="task-meta">时间：{{item.timeRange}}</view>
+            <view class="task-actions">
+              <button
+                size="mini"
+                class="task-btn"
+                data-id="{{item.taskId}}"
+                data-status="{{item.status}}"
+                bindtap="updateTaskStatus"
+                loading="{{updatingTaskId === item.taskId}}"
+                disabled="{{item.status === 2 || updatingTaskId === item.taskId}}"
+              >
+                {{ item.status === 2 ? '已完成' : (updatingTaskId === item.taskId ? '更新中' : (item.status === 1 ? '标记完成' : '开始任务')) }}
+              </button>
+            </view>
           </view>
         </block>
         <view wx:else class="empty">暂无任务</view>
