@@ -50,5 +50,6 @@
       <text class="note-text">底部导航可快速切换「首页 / 活动广场 / 用户管理」</text>
     </view>
   </view>
-</view>
 
+  <admin-tabbar current="home" />
+</view>

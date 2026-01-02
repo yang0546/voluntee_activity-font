@@ -34,11 +34,10 @@ Page({
   },
 
   goActivity() {
-    wx.switchTab({ url: '/pages/admin/activity-list/activity-list' })
+    wx.reLaunch({ url: '/pages/admin/activity-list/activity-list' })
   },
 
   goUser() {
-    wx.switchTab({ url: '/pages/admin/user-list/user-list' })
+    wx.reLaunch({ url: '/pages/admin/user-list/user-list' })
   }
 })
-

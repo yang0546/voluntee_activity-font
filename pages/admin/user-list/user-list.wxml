@@ -96,4 +96,6 @@
     <view class="no-more" wx:if="{{!hasMore && userList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && userList.length === 0}}">暂无用户</view>
   </view>
+
+  <admin-tabbar current="user" />
 </view>

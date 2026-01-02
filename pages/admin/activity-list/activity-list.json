@@ -1,5 +1,8 @@
 {
   "navigationBarTitleText": "活动管理",
   "enablePullDownRefresh": true,
-  "onReachBottomDistance": 50
+  "onReachBottomDistance": 50,
+  "usingComponents": {
+    "admin-tabbar": "/components/admin-tabbar/admin-tabbar"
+  }
 }

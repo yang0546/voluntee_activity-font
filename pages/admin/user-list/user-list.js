@@ -152,7 +152,7 @@ Page({
   onNavChange(e) {
     const { key } = e.currentTarget.dataset
     if (key === 'user') return
-    wx.switchTab({ url: '/pages/admin/activity-list/activity-list' })
+    wx.reLaunch({ url: '/pages/admin/activity-list/activity-list' })
   },
 
   editUser(e) {

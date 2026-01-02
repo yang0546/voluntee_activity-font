@@ -101,5 +101,6 @@
     <view class="no-more" wx:if="{{!hasMore && activityList.length > 0}}">没有更多了</view>
     <view class="empty" wx:if="{{!loading && activityList.length === 0}}">暂无活动</view>
   </view>
-</view>
 
+  <admin-tabbar current="activity" />
+</view>
