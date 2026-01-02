@@ -6,12 +6,7 @@
         <view class="tag {{activity.statusClass}}">{{activity.statusText}}</view>
       </view>
       <view class="detail-meta">
-        <text>{{activity.location || '地点待定'}}</text>
-        <text class="dot">•</text>
-        <text>{{activity.timeRange}}</text>
-      </view>
-      <view class="progress">
-        <view class="progress-bar" style="width: {{activity.progress}}%;"></view>
+        <text>地点：{{activity.location || '地点待定'}}</text>
       </view>
       <view class="progress-text">已报名 {{activity.currentPeople}} / {{activity.requiredPeople}}</view>
     </view>
