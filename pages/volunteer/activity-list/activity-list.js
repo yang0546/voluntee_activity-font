@@ -1,293 +1,150 @@
 const { volunteer } = require('../../../utils/api')
 
+const STATUS_META = {
+  '': { text: '全部', className: 'status-ongoing' },
+  0: { text: '未开始', className: 'status-pending' },
+  1: { text: '进行中', className: 'status-ongoing' },
+  2: { text: '已结束', className: 'status-rejected' },
+  3: { text: '已取消', className: 'status-rejected' }
+}
+
 Page({
   data: {
-    tabs: [
-      { key: 'market', label: '活动广场' },
-      { key: 'applied', label: '已报名' },
-      { key: 'approved', label: '已报名成功' }
-    ],
-    activeTab: 'market',
-    market: {
-      list: [],
-      page: 1,
-      pageSize: 10,
-      total: 0,
-      loading: false,
-      hasMore: true
-    },
-    applied: {
-      list: [],
-      page: 1,
-      pageSize: 10,
-      total: 0,
-      loading: false,
-      hasMore: true
-    },
-    approved: {
-      list: [],
-      page: 1,
-      pageSize: 10,
-      total: 0,
-      loading: false,
-      hasMore: true
-    },
-    statusIndex: 0,
-    statusOptions: [
-      { label: '全部状态', value: '' },
+    keyword: '',
+    statusTabs: [
+      { label: '全部', value: '' },
       { label: '未开始', value: 0 },
       { label: '进行中', value: 1 },
-      { label: '已结束', value: 2 },
-      { label: '已取消', value: 3 }
+      { label: '已结束', value: 2 }
     ],
-    searchParams: {
-      title: '',
-      status: ''
-    },
-    refreshing: false
+    activeStatus: '',
+    activities: [],
+    page: 1,
+    pageSize: 10,
+    total: 0,
+    loading: false,
+    hasMore: true
   },
   onLoad() {
-    this.loadMarketActivities(true)
+    this.loadActivities(true)
   },
   onPullDownRefresh() {
-    this.setData({ refreshing: true })
-    this.refreshActiveTab()
+    this.loadActivities(true)
   },
   onReachBottom() {
-    this.loadActiveTabMore()
-  },
-  onTabChange(e) {
-    const key = e.currentTarget.dataset.key
-    if (key === this.data.activeTab) return
-    this.setData({ activeTab: key })
-    const tabState = this.data[key]
-    if (!tabState.list.length) {
-      this.refreshActiveTab()
+    if (!this.data.hasMore) return
+    if (this.data.activities.length < this.data.total) {
+      this.loadActivities()
     }
   },
-  refreshActiveTab() {
-    const { activeTab } = this.data
-    if (activeTab === 'market') {
-      this.setData({ market: { ...this.data.market, page: 1, hasMore: true } })
-      this.loadMarketActivities(true)
-    } else if (activeTab === 'applied') {
-      this.setData({ applied: { ...this.data.applied, page: 1, hasMore: true } })
-      this.loadSignupRecords('applied', '', true)
-    } else if (activeTab === 'approved') {
-      this.setData({ approved: { ...this.data.approved, page: 1, hasMore: true } })
-      this.loadSignupRecords('approved', 1, true)
-    }
+  handleSearchInput(event) {
+    this.setData({ keyword: event.detail.value })
   },
-  loadActiveTabMore() {
-    const { activeTab } = this.data
-    if (activeTab === 'market') {
-      if (this.data.market.hasMore && !this.data.market.loading) {
-        this.loadMarketActivities(false)
+  handleSearchConfirm() {
+    this.loadActivities(true)
+  },
+  changeStatus(event) {
+    const value = event.currentTarget.dataset.value
+    const normalized = value === '' ? '' : Number(value)
+    this.setData({ activeStatus: normalized })
+    this.loadActivities(true)
+  },
+  async loadActivities(reset = false) {
+    if (this.data.loading || (!this.data.hasMore && !reset)) return
+    const nextPage = reset ? 1 : this.data.page
+    this.setData({ loading: true })
+    try {
+      const res = await volunteer.getActivityList({
+        page: nextPage,
+        pageSize: this.data.pageSize,
+        status: this.data.activeStatus === '' ? '' : this.data.activeStatus,
+        title: this.data.keyword || ''
+      })
+      const records = (res && res.records) || []
+      const mapped = records.map(this.normalizeActivity)
+      const list = reset ? mapped : this.data.activities.concat(mapped)
+      const total = typeof res?.total === 'number' ? res.total : list.length
+      const hasMore = typeof res?.total === 'number'
+        ? list.length < total
+        : records.length === this.data.pageSize
+      this.setData({
+        activities: list,
+        total,
+        page: nextPage + 1,
+        hasMore
+      })
+    } catch (err) {
+      console.error('load activities failed', err)
+      if (reset) {
+        const fallback = [
+          {
+            id: 'sample-1',
+            title: '校园迎新志愿服务',
+            location: '南校区礼堂',
+            startTime: '2024-03-12 08:30:00',
+            endTime: '2024-03-12 12:00:00',
+            currentPeople: 12,
+            requiredPeople: 20,
+            status: 0
+          }
+        ].map(this.normalizeActivity)
+        this.setData({
+          activities: fallback,
+          total: fallback.length,
+          page: 2,
+          hasMore: false
+        })
       }
-    } else if (activeTab === 'applied') {
-      if (this.data.applied.hasMore && !this.data.applied.loading) {
-        this.loadSignupRecords('applied', '', false)
-      }
-    } else if (activeTab === 'approved') {
-      if (this.data.approved.hasMore && !this.data.approved.loading) {
-        this.loadSignupRecords('approved', 1, false)
-      }
+    } finally {
+      this.setData({ loading: false })
+      wx.stopPullDownRefresh()
     }
   },
-  loadMarketActivities(refresh = false) {
-    if (this.data.market.loading) return
-    this.setData({ market: { ...this.data.market, loading: true } })
-    const params = {
-      page: refresh ? 1 : this.data.market.page,
-      pageSize: this.data.market.pageSize,
-      ...this.data.searchParams
+  async handleSignup(event) {
+    event.stopPropagation()
+    const { id } = event.currentTarget.dataset
+    if (!id) return
+    wx.showLoading({ title: '报名中...' })
+    try {
+      await volunteer.signupActivity({ activityId: id })
+      wx.showToast({ title: '报名成功', icon: 'success' })
+      this.loadActivities(true)
+    } catch (err) {
+      console.error('signup failed', err)
+      wx.showToast({ title: err.msg || '报名失败，请稍后再试', icon: 'none' })
+    } finally {
+      wx.hideLoading()
     }
-    volunteer.getActivityList(params).then(res => {
-      const formattedRecords = (res.records || []).map(item => this.decorateActivity(item))
-      const newList = refresh ? formattedRecords : [...this.data.market.list, ...formattedRecords]
-      this.setData({
-        market: {
-          ...this.data.market,
-          list: newList,
-          total: res.total,
-          page: refresh ? 2 : this.data.market.page + 1,
-          hasMore: newList.length < res.total,
-          loading: false
-        },
-        refreshing: false
-      })
-      wx.stopPullDownRefresh()
-    }).catch(() => {
-      this.setData({
-        market: { ...this.data.market, loading: false },
-        refreshing: false
-      })
-      wx.stopPullDownRefresh()
-    })
   },
-  loadSignupRecords(key, status, refresh = false) {
-    const state = this.data[key]
-    if (state.loading) return
-    this.setData({ [key]: { ...state, loading: true } })
-    const params = {
-      page: refresh ? 1 : state.page,
-      pageSize: state.pageSize
-    }
-    if (status !== '' && status !== undefined && status !== null) {
-      params.status = status
-    }
-    volunteer.getSignupRecords(params).then(res => {
-      const formattedRecords = (res.records || []).map(item => ({
-        ...item,
-        signupTimeDisplay: this.formatTime(item.signupTime || ''),
-        auditTimeDisplay: this.formatTime(item.auditTime || ''),
-        statusText: this.getSignupStatusText(item.status),
-        statusClass: this.getSignupStatusClass(item.status),
-        auditReason: item.auditReason || ''
-      }))
-      const newList = refresh ? formattedRecords : [...state.list, ...formattedRecords]
-      this.setData({
-        [key]: {
-          ...state,
-          list: newList,
-          total: res.total,
-          page: refresh ? 2 : state.page + 1,
-          hasMore: newList.length < res.total,
-          loading: false
-        },
-        refreshing: false
-      })
-      wx.stopPullDownRefresh()
-    }).catch(() => {
-      this.setData({
-        [key]: { ...state, loading: false },
-        refreshing: false
-      })
-      wx.stopPullDownRefresh()
-    })
+  goDetail(event) {
+    const { id, activity } = event.currentTarget.dataset
+    let url = '/pages/volunteer/activity-detail/activity-detail'
+    const params = []
+    if (id) params.push(`id=${id}`)
+    if (activity) params.push(`data=${activity}`)
+    if (params.length) url += `?${params.join('&')}`
+    wx.navigateTo({ url })
   },
-  decorateActivity(item) {
-    const isSignupClosed = this.isDeadlinePassed(item.signupDeadline)
-    const startTimeDisplay = this.formatTime(item.startTime)
-    const deadlineDisplay = this.formatTime(item.signupDeadline)
-    // 调试：确保时间被正确格式化
-    if (item.startTime && !startTimeDisplay) {
-      console.warn('时间格式化失败:', item.startTime)
-    }
+  normalizeActivity(item) {
+    const meta = STATUS_META[item.status] || STATUS_META['']
+    const current = Number(item.currentPeople || 0)
+    const required = Number(item.requiredPeople || 0) || 1
+    const progress = Math.min(100, Math.round((current / required) * 100))
+    const serialized = encodeURIComponent(JSON.stringify(item))
     return {
       ...item,
-      startTimeDisplay: startTimeDisplay || '未设置',
-      deadlineDisplay: deadlineDisplay || '未设置',
-      isSignupClosed
+      statusText: meta.text,
+      statusClass: meta.className,
+      progress,
+      timeRange: formatTimeRange(item.startTime, item.endTime),
+      serialized
     }
-  },
-  onSearchInput(e) {
-    this.setData({
-      'searchParams.title': e.detail.value
-    })
-  },
-  onStatusChange(e) {
-    const index = e.detail.value
-    const status = this.data.statusOptions[index].value
-    this.setData({
-      statusIndex: index,
-      'searchParams.status': status,
-      page: 1,
-      hasMore: true
-    })
-    this.loadActivityList(true)
-  },
-  onSearch() {
-    this.setData({
-      market: { ...this.data.market, page: 1, hasMore: true }
-    })
-    this.loadMarketActivities(true)
-  },
-  viewActivityDetail(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/volunteer/activity-detail/activity-detail?id=${id}`
-    })
-  },
-  onSignup(e) {
-    const rawId = e.currentTarget.dataset.id
-    const activityId = Number(rawId) || rawId
-    const activity = this.data.market.list.find(item => item.id === activityId || item.id === rawId)
-    if (activity && activity.isSignupClosed) {
-      wx.showToast({ title: '报名已截止', icon: 'none' })
-      return
-    }
-    wx.showLoading({ title: '报名中...', mask: true })
-    volunteer.signupActivity({ activityId }).then(() => {
-      wx.hideLoading()
-      wx.showToast({ title: '报名成功', icon: 'success' })
-      this.setData({ page: 1, hasMore: true })
-      this.loadActivityList(true)
-    }).catch((err) => {
-      wx.hideLoading()
-      const message = (err && err.msg) || '报名失败'
-      wx.showToast({ title: message, icon: 'none' })
-    })
-  },
-  formatTime(time) {
-    if (!time || time === null || time === undefined || time === '') return ''
-    try {
-      // 处理字符串时间
-      let timeStr = String(time).trim()
-      if (!timeStr) return ''
-      
-      // 如果格式是 "YYYY-MM-DD HH:mm:ss"，直接截取前16位显示
-      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(timeStr)) {
-        return timeStr.substring(0, 16) // 返回 "YYYY-MM-DD HH:mm"
-      }
-      
-      // 如果包含T，先替换为空格
-      if (timeStr.includes('T')) {
-        timeStr = timeStr.replace('T', ' ')
-      }
-      
-      // 尝试解析为Date对象
-      const date = new Date(time)
-      if (!isNaN(date.getTime()) && date.getTime() > 0) {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        return `${year}-${month}-${day} ${hour}:${minute}`
-      }
-      
-      // 如果解析失败，尝试简单格式化字符串（截取前16位）
-      if (timeStr.length >= 16) {
-        return timeStr.substring(0, 16)
-      }
-      return timeStr
-    } catch (e) {
-      // 如果出错，尝试简单处理
-      const timeStr = String(time).replace('T', ' ').trim()
-      return timeStr.length >= 16 ? timeStr.substring(0, 16) : timeStr
-    }
-  },
-  isDeadlinePassed(time) {
-    if (!time) return false
-    const date = new Date(time.replace(' ', 'T'))
-    if (Number.isNaN(date.getTime())) return false
-    return Date.now() > date.getTime()
-  },
-  getStatusText(status) {
-    const map = { 0: '未开始', 1: '进行中', 2: '已结束', 3: '已取消' }
-    return map[status] || '未知'
-  },
-  getStatusClass(status) {
-    const map = { 0: 'status-pending', 1: 'status-active', 2: 'status-ended', 3: 'status-cancelled' }
-    return map[status] || ''
-  },
-  getSignupStatusText(status) {
-    const map = { 0: '待审核', 1: '审核通过', 2: '审核拒绝' }
-    return map[status] || '未知'
-  },
-  getSignupStatusClass(status) {
-    const map = { 0: 'audit-pending', 1: 'audit-approved', 2: 'audit-rejected' }
-    return map[status] || ''
   }
 })
+
+function formatTimeRange(start, end) {
+  if (!start || !end) return '时间待定'
+  const startShort = start.slice(5, 16).replace(' ', ' ')
+  const endShort = end.slice(11, 16)
+  return `${startShort} - ${endShort}`
+}

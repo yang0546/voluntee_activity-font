@@ -1,0 +1,94 @@
+.profile-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.info .name {
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.info .sub {
+  color: #64748b;
+  margin-top: 6rpx;
+}
+
+.stats-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  text-align: center;
+}
+
+.stat-block .stat-value {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.stat-block .stat-label {
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
+.recent-card .record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.record-meta {
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
+.record-status {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+}
+
+.action-list .action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.action-item:last-child {
+  border-bottom: none;
+}
+
+.action-item .chevron {
+  color: #cbd5e1;
+  font-size: 32rpx;
+}
+
+.action-item.danger {
+  color: #b91c1c;
+}

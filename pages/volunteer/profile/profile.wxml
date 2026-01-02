@@ -1,0 +1,59 @@
+<view class="page profile-page">
+  <view class="card profile-card">
+    <view class="profile-info">
+      <image class="avatar" src="{{profile.avatarUrl || defaultAvatar}}" mode="aspectFill"></image>
+      <view class="info">
+        <view class="name">{{profile.name || '志愿者'}}</view>
+        <view class="sub">{{profile.college || '志愿服务小队'}} · {{profile.phone || '完善信息后展示'}}</view>
+      </view>
+    </view>
+    <button size="mini" class="ghost-btn" bindtap="goSquare">去活动广场</button>
+  </view>
+
+  <view class="card stats-card">
+    <view class="stat-block">
+      <view class="stat-value">{{stats.approved}}</view>
+      <view class="stat-label">已通过</view>
+    </view>
+    <view class="stat-block">
+      <view class="stat-value">{{stats.pending}}</view>
+      <view class="stat-label">待审核</view>
+    </view>
+    <view class="stat-block">
+      <view class="stat-value">{{stats.total}}</view>
+      <view class="stat-label">累计报名</view>
+    </view>
+  </view>
+
+  <view class="card recent-card">
+    <view class="section-title">
+      <view>最近报名</view>
+      <text class="link" bindtap="goRecords">全部</text>
+    </view>
+    <block wx:if="{{recentRecords.length}}">
+      <view wx:for="{{recentRecords}}" wx:key="id" class="record-item" data-id="{{item.activityId}}" bindtap="goActivityDetail">
+        <view>
+          <view class="record-title">{{item.activityTitle}}</view>
+          <view class="record-meta">{{item.createTime || '—'}}</view>
+        </view>
+        <view class="record-status {{item.statusClass}}">{{item.statusText}}</view>
+      </view>
+    </block>
+    <view wx:else class="empty">暂无报名记录</view>
+  </view>
+
+  <view class="card action-list">
+    <view class="action-item" bindtap="goRecords">
+      <view>我的报名</view>
+      <text class="chevron">›</text>
+    </view>
+    <view class="action-item" bindtap="contact">
+      <view>联系客服</view>
+      <text class="chevron">›</text>
+    </view>
+    <view class="action-item danger" bindtap="logout">
+      <view>退出登录</view>
+      <text class="chevron">›</text>
+    </view>
+  </view>
+</view>

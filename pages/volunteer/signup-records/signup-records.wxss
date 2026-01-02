@@ -1,120 +1,31 @@
-.container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f5f5f5;
+.record-card {
+  margin-bottom: 18rpx;
 }
 
-.filter-bar {
-  padding: 20rpx;
-  background: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.status-picker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20rpx;
-  height: 60rpx;
-  background: #f5f5f5;
-  border-radius: 30rpx;
-  font-size: 28rpx;
-}
-
-.arrow {
-  margin-left: 10rpx;
-  font-size: 20rpx;
-  color: #999;
-}
-
-.signup-list {
-  flex: 1;
-  padding: 20rpx;
-}
-
-.signup-item {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.04);
-}
-
-.signup-header {
+.record-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 20rpx;
-  margin-bottom: 20rpx;
+  align-items: center;
 }
 
-.activity-title-wrap {
-  flex: 1;
-}
-
-.activity-title {
-  display: block;
+.record-top .title {
   font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8rpx;
+  font-weight: 700;
 }
 
-.activity-time {
-  font-size: 26rpx;
-  color: #999;
-}
-
-.activity-desc {
-  font-size: 26rpx;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 16rpx;
-}
-
-.status-badge {
-  padding: 6rpx 18rpx;
-  border-radius: 20rpx;
+.record-card .tag {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
   font-size: 24rpx;
-  white-space: nowrap;
 }
 
-.status-pending {
-  background: #fff3e0;
-  color: #f57c00;
+.meta {
+  color: #94a3b8;
+  margin-top: 8rpx;
 }
 
-.status-approved {
-  background: #e8f5e9;
-  color: #388e3c;
-}
-
-.status-rejected {
-  background: #ffebee;
-  color: #d32f2f;
-}
-
-.meta-row {
-  display: flex;
-  font-size: 26rpx;
-  color: #666;
-  margin-bottom: 8rpx;
-}
-
-.meta-label {
-  width: 160rpx;
-  color: #999;
-}
-
-.meta-value {
-  flex: 1;
-  color: #444;
-}
-
-.load-more, .no-more, .empty {
+.empty {
   text-align: center;
-  padding: 40rpx;
-  font-size: 28rpx;
-  color: #999;
+  color: #94a3b8;
+  margin-top: 80rpx;
 }

@@ -1,0 +1,86 @@
+<view class="page home-page">
+  <view class="card hero">
+    <view class="hero-header">
+      <view class="hello">你好，{{profile.name || '志愿者'}}</view>
+      <view class="subtitle">感谢你持续的志愿服务</view>
+    </view>
+    <view class="hero-stats">
+      <view class="stat">
+        <view class="stat-value">{{signupSummary.approved}}</view>
+        <view class="stat-label">已通过报名</view>
+      </view>
+      <view class="stat">
+        <view class="stat-value">{{signupSummary.pending}}</view>
+        <view class="stat-label">待审核</view>
+      </view>
+      <view class="stat">
+        <view class="stat-value">{{signupSummary.total}}</view>
+        <view class="stat-label">累计报名</view>
+      </view>
+    </view>
+    <view class="hero-actions">
+      <button class="btn-primary" size="mini" bindtap="goSquare">去活动广场</button>
+      <button class="btn-ghost" size="mini" bindtap="goProfile">个人中心</button>
+    </view>
+  </view>
+
+  <view class="card quick-actions">
+    <view class="section-title">快捷入口</view>
+    <view class="action-grid">
+      <view class="action-item" bindtap="goSquare">
+        <view class="action-icon">🌟</view>
+        <view class="action-text">活动广场</view>
+      </view>
+      <view class="action-item" bindtap="goRecords">
+        <view class="action-icon">📝</view>
+        <view class="action-text">我的报名</view>
+      </view>
+      <view class="action-item" bindtap="goProfile">
+        <view class="action-icon">👤</view>
+        <view class="action-text">个人中心</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card section">
+    <view class="section-title">
+      <view>报名进度</view>
+      <text class="link" bindtap="goRecords">全部</text>
+    </view>
+    <block wx:if="{{mySignups.length}}">
+      <view wx:for="{{mySignups}}" wx:key="id" class="signup-item" data-id="{{item.activityId}}" bindtap="goActivityDetail">
+        <view class="signup-left">
+          <view class="signup-title">{{item.activityTitle}}</view>
+          <view class="signup-meta">{{item.createTime || '—'}}</view>
+        </view>
+        <view class="signup-status {{item.statusClass}}">{{item.statusText}}</view>
+      </view>
+    </block>
+    <view wx:else class="empty">暂无报名，去活动广场看看吧</view>
+  </view>
+
+  <view class="card section">
+    <view class="section-title">
+      <view>热门活动</view>
+      <text class="link" bindtap="goSquare">更多</text>
+    </view>
+    <block wx:if="{{highlightActivities.length}}">
+      <view wx:for="{{highlightActivities}}" wx:key="id" class="activity-highlight" data-id="{{item.id}}" data-activity="{{item.serialized}}" bindtap="goActivityDetail">
+        <view class="highlight-row">
+          <view class="highlight-title">{{item.title}}</view>
+          <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
+        </view>
+        <view class="highlight-meta">
+          <text>{{item.location}}</text>
+          <text class="dot">•</text>
+          <text>{{item.timeRange}}</text>
+        </view>
+        <view class="progress">
+          <view class="progress-bar" style="width: {{item.progress}}%;"></view>
+        </view>
+        <view class="progress-text">已报名 {{item.currentPeople}} / {{item.requiredPeople}}</view>
+      </view>
+    </block>
+    <view wx:else class="empty">暂无活动，稍后再来看</view>
+  </view>
+</view>

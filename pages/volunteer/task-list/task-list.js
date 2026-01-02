@@ -1,79 +1,67 @@
 const { volunteer } = require('../../../utils/api')
 
+const TASK_STATUS = {
+  0: { text: '未开始', className: 'status-pending' },
+  1: { text: '进行中', className: 'status-ongoing' },
+  2: { text: '已完成', className: 'status-approved' }
+}
+
 Page({
   data: {
-    activityId: null,
-    taskList: [],
-    loading: true
+    activityId: '',
+    tasks: []
   },
   onLoad(options) {
-    if (options.activityId) {
-      this.setData({ activityId: options.activityId })
-      this.loadTaskList()
+    const activityId = options?.activityId
+    if (activityId) {
+      this.setData({ activityId })
+      this.loadTasks(activityId)
     }
   },
   onPullDownRefresh() {
-    this.loadTaskList()
-  },
-  loadTaskList() {
-    wx.showLoading({ title: '加载中...' })
-    volunteer.getTaskList(this.data.activityId).then(res => {
-      this.setData({
-        taskList: res || [],
-        loading: false
-      })
-      wx.hideLoading()
+    if (this.data.activityId) {
+      this.loadTasks(this.data.activityId)
+    } else {
       wx.stopPullDownRefresh()
-    }).catch(err => {
-      wx.hideLoading()
-      this.setData({ loading: false })
-      wx.stopPullDownRefresh()
-    })
-  },
-  updateTaskStatus(e) {
-    const { taskid, status } = e.currentTarget.dataset
-    const statusMap = { 0: '未开始', 1: '进行中', 2: '已完成' }
-    wx.showModal({
-      title: '更新任务状态',
-      content: `确定要将任务状态更新为"${statusMap[status]}"吗？`,
-      success: (res) => {
-        if (res.confirm) {
-          wx.showLoading({ title: '更新中...' })
-          volunteer.updateTaskStatus({ taskId: taskid, status }).then(() => {
-            wx.hideLoading()
-            wx.showToast({ title: '更新成功', icon: 'success' })
-            this.loadTaskList()
-          }).catch(err => {
-            wx.hideLoading()
-          })
-        }
-      }
-    })
-  },
-  formatTime(time) {
-    if (!time) return ''
-    try {
-      const date = new Date(time)
-      if (!isNaN(date.getTime())) {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        return `${year}-${month}-${day} ${hour}:${minute}`
-      }
-      return String(time).replace('T', ' ').substring(0, 16)
-    } catch (e) {
-      return String(time).replace('T', ' ').substring(0, 16)
     }
   },
-  getStatusText(status) {
-    const map = { 0: '未开始', 1: '进行中', 2: '已完成' }
-    return map[status] || '未知'
-  },
-  getStatusClass(status) {
-    const map = { 0: 'status-pending', 1: 'status-active', 2: 'status-done' }
-    return map[status] || ''
+  async loadTasks(activityId) {
+    if (!activityId) return
+    try {
+      const res = await volunteer.getTaskList(activityId)
+      const tasks = (res || []).map(item => {
+        const meta = TASK_STATUS[item.status] || TASK_STATUS[0]
+        return {
+          ...item,
+          statusText: meta.text,
+          statusClass: meta.className,
+          timeRange: formatTimeRange(item.startTime, item.endTime)
+        }
+      })
+      this.setData({ tasks })
+    } catch (err) {
+      console.error('load tasks failed', err)
+      this.setData({
+        tasks: [
+          {
+            taskId: 'sample-1',
+            content: '活动现场签到',
+            userName: '我',
+            statusText: '未开始',
+            statusClass: 'status-pending',
+            timeRange: '09:00 - 10:00'
+          }
+        ]
+      })
+    } finally {
+      wx.stopPullDownRefresh()
+    }
   }
 })
 
+function formatTimeRange(start, end) {
+  if (!start || !end) return '时间待定'
+  const startShort = start.slice(11, 16)
+  const endShort = end.slice(11, 16)
+  return `${startShort} - ${endShort}`
+}

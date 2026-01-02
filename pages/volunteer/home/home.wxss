@@ -1,0 +1,173 @@
+.home-page .hero {
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  color: #ffffff;
+}
+
+.hero-header .hello {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.hero-header .subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8rpx;
+  font-size: 26rpx;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: space-between;
+  margin: 24rpx 0;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8rpx;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.quick-actions .action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.action-item {
+  background: #f5f7ff;
+  border-radius: 16rpx;
+  padding: 20rpx 12rpx;
+  text-align: center;
+}
+
+.action-icon {
+  font-size: 38rpx;
+}
+
+.action-text {
+  margin-top: 6rpx;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.section .link {
+  color: #4f46e5;
+  font-size: 26rpx;
+}
+
+.signup-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.signup-item:last-child {
+  border-bottom: none;
+}
+
+.signup-title {
+  font-weight: 700;
+  font-size: 30rpx;
+}
+
+.signup-meta {
+  color: #94a3b8;
+  margin-top: 6rpx;
+  font-size: 24rpx;
+}
+
+.signup-status {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+}
+
+.status-pending {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.status-approved {
+  background: #ecfeff;
+  color: #0ea5e9;
+}
+
+.status-rejected {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.status-ongoing {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.activity-highlight {
+  padding: 12rpx 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.activity-highlight:last-child {
+  border-bottom: none;
+}
+
+.highlight-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.highlight-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.highlight-meta {
+  margin: 10rpx 0;
+  color: #64748b;
+  font-size: 26rpx;
+}
+
+.highlight-meta .dot {
+  margin: 0 10rpx;
+}
+
+.progress {
+  width: 100%;
+  height: 12rpx;
+  background: #e2e8f0;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #3b82f6);
+}
+
+.progress-text {
+  color: #94a3b8;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 24rpx 0;
+}

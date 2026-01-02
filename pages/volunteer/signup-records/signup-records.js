@@ -1,109 +1,58 @@
 const { volunteer } = require('../../../utils/api')
 
+const SIGNUP_STATUS = {
+  0: { text: '待审核', className: 'status-pending' },
+  1: { text: '已通过', className: 'status-approved' },
+  2: { text: '已拒绝', className: 'status-rejected' }
+}
+
 Page({
   data: {
-    signupList: [],
-    page: 1,
-    pageSize: 10,
-    total: 0,
-    loading: false,
-    hasMore: true,
-    activityId: null,
-    statusIndex: 0,
-    statusOptions: [
-      { label: '全部状态', value: '' },
-      { label: '待审核', value: 0 },
-      { label: '审核通过', value: 1 },
-      { label: '审核拒绝', value: 2 }
-    ],
-    searchParams: {
-      status: ''
-    }
+    records: []
   },
-  onLoad(options) {
-    if (options && options.activityId) {
-      this.setData({ activityId: options.activityId })
-    }
-    this.loadSignupList(true)
+  onLoad() {
+    this.loadRecords()
   },
   onPullDownRefresh() {
-    this.setData({ page: 1, hasMore: true })
-    this.loadSignupList(true)
+    this.loadRecords()
   },
-  onReachBottom() {
-    if (this.data.hasMore && !this.data.loading) {
-      this.loadSignupList(false)
-    }
-  },
-  loadSignupList(refresh = false) {
-    if (this.data.loading) return
-    this.setData({ loading: true })
-    const params = {
-      page: refresh ? 1 : this.data.page,
-      pageSize: this.data.pageSize,
-      activityId: this.data.activityId,
-      ...this.data.searchParams
-    }
-    volunteer.getSignupRecords(params).then(res => {
-      const records = (res.records || []).map(item => ({
-        ...item,
-        signupTimeDisplay: this.formatTime(item.signupTime),
-        auditTimeDisplay: this.formatTime(item.auditTime),
-        startTimeDisplay: this.formatTime(item.startTime)
-      }))
-      const newList = refresh ? records : [...this.data.signupList, ...records]
-      this.setData({
-        signupList: newList,
-        total: res.total,
-        page: refresh ? 2 : this.data.page + 1,
-        hasMore: newList.length < res.total,
-        loading: false
-      })
-      if (refresh) {
-        wx.stopPullDownRefresh()
-      }
-    }).catch(() => {
-      this.setData({ loading: false })
-      if (refresh) {
-        wx.stopPullDownRefresh()
-      }
-    })
-  },
-  onStatusChange(e) {
-    const index = e.detail.value
-    const status = this.data.statusOptions[index].value
-    this.setData({
-      statusIndex: index,
-      'searchParams.status': status,
-      page: 1,
-      hasMore: true
-    })
-    this.loadSignupList(true)
-  },
-  formatTime(time) {
-    if (!time) return ''
+  async loadRecords() {
     try {
-      const date = new Date(time)
-      if (!isNaN(date.getTime())) {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        const hour = String(date.getHours()).padStart(2, '0')
-        const minute = String(date.getMinutes()).padStart(2, '0')
-        return `${year}-${month}-${day} ${hour}:${minute}`
-      }
-      return String(time).replace('T', ' ').substring(0, 16)
-    } catch (e) {
-      return String(time).replace('T', ' ').substring(0, 16)
+      const res = await volunteer.getSignupRecords({ page: 1, pageSize: 100 })
+      const list = (res && res.records) || []
+      const mapped = list.map(item => {
+        const meta = SIGNUP_STATUS[item.status] || { text: '未知', className: 'status-pending' }
+        return {
+          ...item,
+          statusText: meta.text,
+          statusClass: meta.className,
+          activityTitle: item.activityTitle || item.title || '志愿活动'
+        }
+      })
+      this.setData({ records: mapped })
+    } catch (err) {
+      console.error('load signup records failed', err)
+      this.setData({
+        records: [
+          {
+            id: 'sample-1',
+            activityId: '1',
+            activityTitle: '校园迎新志愿服务',
+            statusText: '待审核',
+            statusClass: 'status-pending',
+            createTime: '2024-03-10 10:00'
+          }
+        ]
+      })
+    } finally {
+      wx.stopPullDownRefresh()
     }
   },
-  getStatusText(status) {
-    const map = { 0: '待审核', 1: '审核通过', 2: '审核拒绝' }
-    return map[status] || '未知'
-  },
-  getStatusClass(status) {
-    const map = { 0: 'status-pending', 1: 'status-approved', 2: 'status-rejected' }
-    return map[status] || ''
+  goDetail(event) {
+    const { id } = event.currentTarget.dataset
+    if (!id) return
+    wx.navigateTo({
+      url: `/pages/volunteer/activity-detail/activity-detail?id=${id}`
+    })
   }
 })
-

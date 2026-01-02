@@ -1,20 +1,13 @@
-<view class="container">
-  <scroll-view class="task-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
-    <view class="task-item" wx:for="{{taskList}}" wx:key="taskId">
-      <view class="task-header">
-        <text class="task-content">{{item.content}}</text>
-        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+<view class="page task-page">
+  <block wx:if="{{tasks.length}}">
+    <view wx:for="{{tasks}}" wx:key="taskId" class="task-card card">
+      <view class="task-top">
+        <view class="title">{{item.content}}</view>
+        <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
       </view>
-      <view class="task-time">
-        <text>⏰ {{formatTime(item.startTime)}} - {{formatTime(item.endTime)}}</text>
-      </view>
-      <view class="task-actions">
-        <button class="btn btn-sm" wx:if="{{item.status !== 0}}" data-taskid="{{item.taskId}}" data-status="0" bindtap="updateTaskStatus">标记为未开始</button>
-        <button class="btn btn-sm" wx:if="{{item.status !== 1}}" data-taskid="{{item.taskId}}" data-status="1" bindtap="updateTaskStatus">标记为进行中</button>
-        <button class="btn btn-sm" wx:if="{{item.status !== 2}}" data-taskid="{{item.taskId}}" data-status="2" bindtap="updateTaskStatus">标记为已完成</button>
-      </view>
+      <view class="meta">负责人：{{item.userName || '我'}}</view>
+      <view class="meta">{{item.timeRange}}</view>
     </view>
-    <view class="empty" wx:if="{{!loading && taskList.length === 0}}">暂无任务</view>
-  </scroll-view>
+  </block>
+  <view wx:else class="empty">暂无任务</view>
 </view>
-

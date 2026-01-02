@@ -1,37 +1,13 @@
-<view class="container">
-  <view class="filter-bar">
-    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
-      <view class="status-picker">
-        <text>{{statusOptions[statusIndex].label}}</text>
-        <text class="arrow">▼</text>
+<view class="page records-page">
+  <block wx:if="{{records.length}}">
+    <view wx:for="{{records}}" wx:key="id" class="record-card card" data-id="{{item.activityId}}" bindtap="goDetail">
+      <view class="record-top">
+        <view class="title">{{item.activityTitle}}</view>
+        <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
       </view>
-    </picker>
-  </view>
-  <scroll-view class="signup-list" scroll-y refresher-enabled refresher-triggered="{{refreshing}}" bindrefresherrefresh="onPullDownRefresh">
-    <view class="signup-item" wx:for="{{signupList}}" wx:key="signupId">
-      <view class="signup-header">
-        <view class="activity-title-wrap">
-          <text class="activity-title">{{item.title}}</text>
-          <text class="activity-time" wx:if="{{item.startTimeDisplay}}">活动时间：{{item.startTimeDisplay}}</text>
-        </view>
-        <text class="status-badge {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
-      </view>
-      <view class="activity-desc" wx:if="{{item.description}}">{{item.description}}</view>
-      <view class="meta-row">
-        <text class="meta-label">报名时间：</text>
-        <text class="meta-value">{{item.signupTimeDisplay}}</text>
-      </view>
-      <view class="meta-row" wx:if="{{item.auditTimeDisplay}}">
-        <text class="meta-label">审核时间：</text>
-        <text class="meta-value">{{item.auditTimeDisplay}}</text>
-      </view>
-      <view class="meta-row" wx:if="{{item.auditReason}}">
-        <text class="meta-label">审核说明：</text>
-        <text class="meta-value">{{item.auditReason}}</text>
-      </view>
+      <view class="meta">{{item.createTime || '—'}}</view>
+      <view class="meta muted">报名ID：{{item.id}}</view>
     </view>
-    <view class="load-more" wx:if="{{loading}}">加载中...</view>
-    <view class="no-more" wx:if="{{!hasMore && signupList.length > 0}}">没有更多了</view>
-    <view class="empty" wx:if="{{!loading && signupList.length === 0}}">暂无报名记录</view>
-  </scroll-view>
+  </block>
+  <view wx:else class="empty">暂无报名记录</view>
 </view>

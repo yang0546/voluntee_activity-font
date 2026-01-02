@@ -51,6 +51,8 @@ const leader = {
 const volunteer = {
   // 报名志愿活动
   signupActivity: (data) => request({ url: '/volunteer/activity/signup', method: 'POST', data }),
+  // 获取活动详情
+  getActivityById: (id) => request({ url: `/volunteer/activity/${id}`, method: 'GET' }),
   // 获取活动任务列表
   getTaskList: (activityId) => request({ url: `/volunteer/activity/taskList?activityId=${activityId}`, method: 'GET' }),
   // 更新任务状态

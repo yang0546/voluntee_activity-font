@@ -63,19 +63,16 @@ Page({
   redirectByRole(role) {
     let url = ''
     if (role === 0) {
-      url = '/pages/volunteer/activity-list/activity-list'
+      url = '/pages/volunteer/home/home'
     } else if (role === 1) {
       url = '/pages/leader/home/home'
     } else if (role === 2) {
       url = '/pages/admin/home/home'
     }
     if (url) {
-      // 管理员入口使用 tabBar，需要 switchTab；其他保持 reLaunch
-      if (role === 2) {
-        wx.switchTab({ url })
-      } else {
-        wx.reLaunch({ url })
-      }
+      // 志愿者使用底部导航，其他角色直接重定向
+      const redirect = role === 0 ? wx.switchTab : wx.reLaunch
+      redirect({ url })
     }
   }
 })
