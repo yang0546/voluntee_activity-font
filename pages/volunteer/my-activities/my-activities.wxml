@@ -1,0 +1,15 @@
+<view class="page my-activities">
+  <block wx:if="{{list.length}}">
+    <view wx:for="{{list}}" wx:key="id" class="card activity-item" data-id="{{item.activityId}}" bindtap="goDetail">
+      <view class="title-row">
+        <view class="title">{{item.activityTitle || item.title || '志愿活动'}}</view>
+        <view class="tag status-approved">已通过</view>
+      </view>
+      <!-- <view class="meta">地点：{{item.location || '待定'}}</view>
+      <view class="meta">开始：{{item.startTimeText || '待定'}}</view>
+      <view class="meta">报名截止：{{item.signupDeadlineText || '待定'}}</view> -->
+      <view class="meta muted">报名时间：{{item.signupTimeText || '—'}}</view>
+    </view>
+  </block>
+  <view wx:else class="empty">暂无已通过的活动，快去报名吧</view>
+</view>

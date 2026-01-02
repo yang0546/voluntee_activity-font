@@ -10,10 +10,15 @@ const STATUS_META = {
 Page({
   data: {
     activity: null,
-    loading: false
+    loading: false,
+    signing: false,
+    showTasks: false,
+    tasksLoading: false,
+    tasks: []
   },
   onLoad(options) {
-    const { data, id } = options || {}
+    const { data, id, from } = options || {}
+    this.setData({ showTasks: from === 'my-activities' })
     if (data) {
       try {
         const parsed = JSON.parse(decodeURIComponent(data))
@@ -32,6 +37,9 @@ Page({
       const detail = await volunteer.getActivityById(id)
       if (detail) {
         this.setData({ activity: this.normalizeActivity(detail) })
+        if (this.data.showTasks) {
+          this.loadTasks(detail.id)
+        }
       }
     } catch (err) {
       console.error('load activity detail failed', err)
@@ -51,7 +59,9 @@ Page({
   },
   async handleSignup() {
     if (!this.data.activity || !this.data.activity.id) return
-    wx.showLoading({ title: '报名中...' })
+    if (this.data.signing) return
+    this.setData({ signing: true })
+    wx.showLoading({ title: '报名中...', mask: true })
     try {
       await volunteer.signupActivity({ activityId: this.data.activity.id })
       wx.showToast({ title: '报名成功', icon: 'success' })
@@ -61,6 +71,21 @@ Page({
       wx.showToast({ title: err.msg || '报名失败，请稍后再试', icon: 'none' })
     } finally {
       wx.hideLoading()
+      this.setData({ signing: false })
+    }
+  },
+  async loadTasks(activityId) {
+    if (!activityId) return
+    this.setData({ tasksLoading: true })
+    try {
+      const res = await volunteer.getTaskList(activityId)
+      const list = (res || []).map(mapTask)
+      this.setData({ tasks: list })
+    } catch (err) {
+      console.error('load tasks failed', err)
+      this.setData({ tasks: [] })
+    } finally {
+      this.setData({ tasksLoading: false })
     }
   },
   normalizeActivity(item) {
@@ -81,6 +106,28 @@ Page({
 function formatTimeRange(start, end) {
   if (!start || !end) return '时间待定'
   const startShort = start.slice(5, 16).replace(' ', ' ')
+  const endShort = end.slice(11, 16)
+  return `${startShort} - ${endShort}`
+}
+
+function mapTask(item) {
+  const STATUS_MAP = {
+    0: { text: '未开始', className: 'status-pending' },
+    1: { text: '进行中', className: 'status-ongoing' },
+    2: { text: '已完成', className: 'status-approved' }
+  }
+  const meta = STATUS_MAP[item.status] || STATUS_MAP[0]
+  return {
+    ...item,
+    statusText: meta.text,
+    statusClass: meta.className,
+    timeRange: formatTaskTime(item.startTime, item.endTime)
+  }
+}
+
+function formatTaskTime(start, end) {
+  if (!start || !end) return '时间待定'
+  const startShort = start.slice(11, 16)
   const endShort = end.slice(11, 16)
   return `${startShort} - ${endShort}`
 }

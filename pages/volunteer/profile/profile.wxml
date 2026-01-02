@@ -25,7 +25,7 @@
     </view>
   </view>
 
-  <view class="card recent-card">
+  <!-- <view class="card recent-card">
     <view class="section-title">
       <view>最近报名</view>
       <text class="link" bindtap="goRecords">全部</text>
@@ -40,11 +40,15 @@
       </view>
     </block>
     <view wx:else class="empty">暂无报名记录</view>
-  </view>
+  </view> -->
 
   <view class="card action-list">
     <view class="action-item" bindtap="goRecords">
       <view>我的报名</view>
+      <text class="chevron">›</text>
+    </view>
+    <view class="action-item" bindtap="goMyActivities">
+      <view>我的活动</view>
       <text class="chevron">›</text>
     </view>
     <view class="action-item" bindtap="contact">

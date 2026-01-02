@@ -1,0 +1,35 @@
+.my-activities {
+  padding: 24rpx 32rpx;
+  box-sizing: border-box;
+}
+
+.activity-item {
+  margin-bottom: 20rpx;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.meta {
+  color: #64748b;
+  margin-top: 8rpx;
+}
+
+.meta.muted {
+  color: #94a3b8;
+}
+
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: 120rpx;
+}

@@ -60,7 +60,9 @@ const volunteer = {
   // 获取所有活动信息
   getActivityList: (params) => request({ url: '/volunteer/activity/list', method: 'GET', data: params }),
   // 获取报名记录列表
-  getSignupRecords: (params) => request({ url: '/volunteer/activity/signupRecords', method: 'GET', data: params })
+  getSignupRecords: (params) => request({ url: '/volunteer/activity/signupRecords', method: 'GET', data: params }),
+  // 获取已通过报名活动
+  getApprovedActivities: () => request({ url: '/volunteer/activity/signupRecords', method: 'GET', data: { status: 1, page: 1, pageSize: 100 } })
 }
 
 module.exports = {

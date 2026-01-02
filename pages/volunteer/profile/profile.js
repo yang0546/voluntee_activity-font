@@ -84,6 +84,9 @@ Page({
   goRecords() {
     wx.navigateTo({ url: '/pages/volunteer/signup-records/signup-records' })
   },
+  goMyActivities() {
+    wx.navigateTo({ url: '/pages/volunteer/my-activities/my-activities' })
+  },
   goActivityDetail(event) {
     const { id } = event.currentTarget.dataset
     if (!id) return

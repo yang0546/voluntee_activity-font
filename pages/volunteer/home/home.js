@@ -147,6 +147,9 @@ Page({
   goProfile() {
     wx.switchTab({ url: '/pages/volunteer/profile/profile' })
   },
+  goMyActivities() {
+    wx.navigateTo({ url: '/pages/volunteer/my-activities/my-activities' })
+  },
   goRecords() {
     wx.navigateTo({ url: '/pages/volunteer/signup-records/signup-records' })
   },

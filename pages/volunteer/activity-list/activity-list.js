@@ -23,9 +23,14 @@ Page({
     pageSize: 10,
     total: 0,
     loading: false,
-    hasMore: true
+    hasMore: true,
+    signingId: ''
   },
   onLoad() {
+    this.loadActivities(true)
+  },
+  onShow() {
+    // 每次返回页面重新拉取，不使用已缓存列表
     this.loadActivities(true)
   },
   onPullDownRefresh() {
@@ -101,10 +106,15 @@ Page({
     }
   },
   async handleSignup(event) {
-    event.stopPropagation()
+    event.stopPropagation && event.stopPropagation()
     const { id } = event.currentTarget.dataset
-    if (!id) return
-    wx.showLoading({ title: '报名中...' })
+    if (!id) {
+      wx.showToast({ title: '缺少活动ID', icon: 'none' })
+      return
+    }
+    if (this.data.signingId) return
+    this.setData({ signingId: id })
+    wx.showLoading({ title: '报名中...', mask: true })
     try {
       await volunteer.signupActivity({ activityId: id })
       wx.showToast({ title: '报名成功', icon: 'success' })
@@ -114,6 +124,7 @@ Page({
       wx.showToast({ title: err.msg || '报名失败，请稍后再试', icon: 'none' })
     } finally {
       wx.hideLoading()
+      this.setData({ signingId: '' })
     }
   },
   goDetail(event) {
@@ -136,7 +147,8 @@ Page({
       statusText: meta.text,
       statusClass: meta.className,
       progress,
-      timeRange: formatTimeRange(item.startTime, item.endTime),
+      startText: formatDateTime(item.startTime),
+      signupDeadlineText: formatDateTime(item.signupDeadline),
       serialized
     }
   }
@@ -147,4 +159,10 @@ function formatTimeRange(start, end) {
   const startShort = start.slice(5, 16).replace(' ', ' ')
   const endShort = end.slice(11, 16)
   return `${startShort} - ${endShort}`
+}
+
+function formatDateTime(value) {
+  if (!value) return ''
+  // keep month-day and hh:mm for brevity
+  return value.slice(5, 16).replace(' ', ' ')
 }

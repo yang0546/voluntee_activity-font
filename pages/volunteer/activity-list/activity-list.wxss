@@ -39,17 +39,22 @@
 
 .activity-card {
   margin-top: 20rpx;
+  border: 1rpx solid #e5e7eb;
+  box-shadow: 0 12rpx 28rpx rgba(15, 23, 42, 0.06);
+  border-radius: 20rpx;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 8rpx;
 }
 
 .card-header .title {
   font-size: 32rpx;
   font-weight: 700;
+  color: #0f172a;
 }
 
 .card .tag {
@@ -60,25 +65,42 @@
 
 .meta {
   color: #64748b;
-  margin: 10rpx 0;
+  margin: 8rpx 0;
+  font-size: 26rpx;
 }
 
 .meta .dot {
   margin: 0 10rpx;
 }
 
+.meta-time {
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.meta-time::before {
+  content: '';
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #4f46e5;
+  display: inline-block;
+}
+
 .progress {
   width: 100%;
-  height: 12rpx;
-  background: #e2e8f0;
-  border-radius: 12rpx;
+  height: 14rpx;
+  background: linear-gradient(90deg, #e0e7ff, #e2e8f0);
+  border-radius: 14rpx;
   overflow: hidden;
   margin: 10rpx 0;
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #4f46e5, #3b82f6);
+  background: linear-gradient(90deg, #22c55e, #16a34a);
 }
 
 .progress-text {
@@ -92,6 +114,8 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 6rpx;
+  padding-top: 6rpx;
+  border-top: 1rpx solid #e5e7eb;
 }
 
 .actions {
@@ -108,6 +132,15 @@
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: #fff;
   border: none;
+}
+
+.activity-card .info {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.activity-card .muted {
+  color: #94a3b8;
 }
 
 .empty,

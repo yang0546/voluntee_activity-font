@@ -11,16 +11,16 @@
   </view>
 
   <block wx:if="{{activities.length}}">
-    <view wx:for="{{activities}}" wx:key="id" class="activity-card card" data-id="{{item.id}}" data-activity="{{item.serialized}}" bindtap="goDetail">
+    <view wx:for="{{activities}}" wx:key="id" class="activity-card card" data-id="{{item.id}}" data-activity="{{item.serialized}}">
       <view class="card-header">
         <view class="title">{{item.title}}</view>
         <view class="tag {{item.statusClass}}">{{item.statusText}}</view>
       </view>
       <view class="meta">
         <text>{{item.location || '地点待定'}}</text>
-        <text class="dot">•</text>
-        <text>{{item.timeRange}}</text>
       </view>
+      <view class="meta meta-time">开始：{{item.startText || '待定'}}</view>
+      <view class="meta meta-time">报名截止：{{item.signupDeadlineText || '待定'}}</view>
       <view class="progress">
         <view class="progress-bar" style="width: {{item.progress}}%;"></view>
       </view>
@@ -31,7 +31,17 @@
         </view>
         <view class="actions">
           <button size="mini" class="ghost-btn" catchtap="goDetail" data-id="{{item.id}}" data-activity="{{item.serialized}}">详情</button>
-          <button size="mini" type="primary" class="primary-btn" catchtap="handleSignup" data-id="{{item.id}}">报名</button>
+          <button
+            size="mini"
+            type="primary"
+            class="primary-btn"
+            catchtap="handleSignup"
+            data-id="{{item.id}}"
+            loading="{{signingId === item.id}}"
+            disabled="{{signingId === item.id}}"
+          >
+            {{signingId === item.id ? '报名中' : '报名'}}
+          </button>
         </view>
       </view>
     </view>

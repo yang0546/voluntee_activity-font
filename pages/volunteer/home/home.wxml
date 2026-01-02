@@ -26,21 +26,21 @@
 
   <view class="card quick-actions">
     <view class="section-title">快捷入口</view>
-    <view class="action-grid">
-      <view class="action-item" bindtap="goSquare">
-        <view class="action-icon">🌟</view>
-        <view class="action-text">活动广场</view>
-      </view>
-      <view class="action-item" bindtap="goRecords">
-        <view class="action-icon">📝</view>
-        <view class="action-text">我的报名</view>
-      </view>
-      <view class="action-item" bindtap="goProfile">
-        <view class="action-icon">👤</view>
-        <view class="action-text">个人中心</view>
+      <view class="action-grid">
+        <view class="action-item" bindtap="goSquare">
+          <view class="action-icon">🌟</view>
+          <view class="action-text">活动广场</view>
+        </view>
+        <view class="action-item" bindtap="goRecords">
+          <view class="action-icon">📝</view>
+          <view class="action-text">我的报名</view>
+        </view>
+        <view class="action-item" bindtap="goMyActivities">
+          <view class="action-icon">✅</view>
+          <view class="action-text">我的活动</view>
+        </view>
       </view>
     </view>
-  </view>
 
   <view class="card section">
     <view class="section-title">
