@@ -49,7 +49,7 @@
         <view class="task-item" wx:for="{{taskList}}" wx:key="taskId">
           <view class="task-row">
             <text class="task-user">{{item.userName || '未设置'}}</text>
-            <text class="task-status">{{item.statusText}}</text>
+            <text class="status-badge task-status {{item.statusClass}}">{{item.statusText}}</text>
           </view>
           <text class="task-content">{{item.content || '无任务内容'}}</text>
           <view class="task-time">

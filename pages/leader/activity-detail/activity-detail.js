@@ -65,17 +65,25 @@ Page({
 
   parseTasks(list) {
     if (!Array.isArray(list)) return []
-    return list.map(item => ({
-      ...item,
-      startTimeDisplay: this.formatDateTime(item.startTime),
-      endTimeDisplay: this.formatDateTime(item.endTime),
-      statusText: this.getTaskStatusText(item.status)
-    }))
+    return list.map(item => {
+      const statusInfo = this.getTaskStatusInfo(item.status)
+      return {
+        ...item,
+        startTimeDisplay: this.formatDateTime(item.startTime),
+        endTimeDisplay: this.formatDateTime(item.endTime),
+        statusText: statusInfo.text,
+        statusClass: statusInfo.cls
+      }
+    })
   },
 
-  getTaskStatusText(status) {
-    const map = { 0: '未开始', 1: '进行中', 2: '已完成' }
-    return map[status] || '未开始'
+  getTaskStatusInfo(status) {
+    const map = {
+      0: { text: '未开始', cls: 'status-task-pending' },
+      1: { text: '进行中', cls: 'status-task-progress' },
+      2: { text: '已完成', cls: 'status-task-done' }
+    }
+    return map[status] || map[0]
   },
 
   formatDateTime(time) {
