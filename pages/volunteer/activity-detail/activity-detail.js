@@ -13,13 +13,21 @@ Page({
     loading: false,
     signing: false,
     showTasks: false,
+    showSignupButton: true,
     tasksLoading: false,
     tasks: [],
     updatingTaskId: ''
   },
   onLoad(options) {
     const { data, id, from } = options || {}
-    this.setData({ showTasks: from === 'my-activities' })
+    const source = from || ''
+    const fromMyActivities = source === 'my-activities'
+    const fromRecords = source === 'signup-records'
+    const hideSignup = fromMyActivities || fromRecords
+    this.setData({
+      showTasks: fromMyActivities,
+      showSignupButton: !hideSignup
+    })
     if (data) {
       try {
         const parsed = JSON.parse(decodeURIComponent(data))

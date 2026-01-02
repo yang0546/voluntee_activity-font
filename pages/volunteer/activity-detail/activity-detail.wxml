@@ -72,7 +72,7 @@
       </view>
     </block>
 
-    <view class="footer-actions">
+    <view wx:if="{{showSignupButton}}" class="footer-actions">
       <button
         class="btn-primary"
         bindtap="handleSignup"
