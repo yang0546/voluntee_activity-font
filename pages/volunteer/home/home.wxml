@@ -76,7 +76,7 @@
           <text>{{item.timeRange}}</text>
         </view>
         <view class="progress">
-          <view class="progress-bar" style="width: {{item.progress}}%;"></view>
+          <view class="progress-bar" style="{{'width: ' + item.progress + '%;'}}"></view>
         </view>
         <view class="progress-text">已报名 {{item.currentPeople}} / {{item.requiredPeople}}</view>
       </view>
