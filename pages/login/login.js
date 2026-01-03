@@ -31,7 +31,12 @@ Page({
               wx.hideLoading()
               // 后端新增 userName，用于首页欢迎语；兼容老字段 name
               const displayName = data.userName || data.name || nickName
-              const normalizedProfile = { ...data, name: displayName, userName: displayName }
+              const normalizedProfile = {
+                ...data,
+                name: displayName,
+                userName: displayName,
+                avatarUrl: data.avatarUrl || avatarUrl || ''
+              }
               app.globalData.profile = normalizedProfile
               app.globalData.userInfo = userRes.userInfo
               wx.setStorageSync('token', data.token || '')
