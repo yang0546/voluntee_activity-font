@@ -18,10 +18,7 @@
         <view class="stat-label">累计报名</view>
       </view>
     </view>
-    <view class="hero-actions">
-      <button class="btn-primary" size="mini" bindtap="goSquare">去活动广场</button>
-      <button class="btn-ghost" size="mini" bindtap="goProfile">个人中心</button>
-    </view>
+
   </view>
 
   <view class="card quick-actions">
