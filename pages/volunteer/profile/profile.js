@@ -81,6 +81,9 @@ Page({
   goSquare() {
     wx.switchTab({ url: '/pages/volunteer/activity-list/activity-list' })
   },
+  goEditInfo() {
+    wx.navigateTo({ url: '/pages/volunteer/profile/edit-info/edit-info' })
+  },
   goRecords() {
     wx.navigateTo({ url: '/pages/volunteer/signup-records/signup-records' })
   },

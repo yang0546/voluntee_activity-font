@@ -6,9 +6,8 @@
         <image class="avatar" src="{{profile.avatarUrl || defaultAvatar}}" mode="aspectFill"></image>
         <view class="hero-text">
           <view class="name">{{profile.name || '志愿者'}}</view>
-          <view class="sub">{{profile.college || '志愿服务小队'}} · {{profile.phone || '完善信息后展示'}}</view>
         </view>
-        <button size="mini" class="primary-ghost" bindtap="goSquare">去活动广场</button>
+        <button size="mini" class="primary-ghost" bindtap="goEditInfo">修改个人信息</button>
       </view>
     </view>
   </view>

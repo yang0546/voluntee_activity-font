@@ -4,6 +4,7 @@
     "pages/volunteer/home/home",
     "pages/volunteer/activity-list/activity-list",
     "pages/volunteer/profile/profile",
+    "pages/volunteer/profile/edit-info/edit-info",
     "pages/volunteer/activity-detail/activity-detail",
     "pages/volunteer/signup-records/signup-records",
     "pages/volunteer/my-activities/my-activities",
